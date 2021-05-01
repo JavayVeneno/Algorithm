@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Student {
+public class Student implements Comparable<Student>{
     public Student(){
 
     }
@@ -51,8 +51,17 @@ public class Student {
         return Objects.equals(id, student.id);
     }
 
+
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public int compareTo(Student o) {
+
+        //比较无非就三种情况,小于等于大于,所以需要写三个if,但是我们可以直接return 两者的计算差值,这样更优雅
+
+        return this.age - o.age;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Student[id:%d,name:%s,age:%d] %n",this.id,this.name,this.age);
     }
 }

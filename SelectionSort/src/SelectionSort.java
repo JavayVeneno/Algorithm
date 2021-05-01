@@ -41,8 +41,22 @@ public class SelectionSort {
 
 
     public static void main(String[] args) {
-        Integer[] arr = {2,5,6,7,1,3,4};
-        sort(arr,false);
-        Arrays.stream(arr).forEach(System.out::println);
+//        Integer[] arr = {2,5,6,7,1,3,4};
+//        sort(arr,false);
+//        Arrays.stream(arr).forEach(System.out::println);
+
+        Student s1 = new Student(1L,"老刘",30);
+        Student s2 = new Student(2L,"胜英",29);
+        Student s3 = new Student(3L,"云神",28);
+        Student s4 = new Student(4L,"海军",27);
+        Student s5 = new Student(5L,"王波",26);
+        Student s6 = new Student(6L,"徐源",28);
+        Student s7 = new Student(7L,"志林",27);
+        Student s8 = new Student(8L,"康力",29);
+        Student s9 = new Student(9L,"志伟",24);
+        Student[] ennovations = {s1,s2,s3,s4,s5,s6,s7,s8,s9};
+        sort(ennovations,false);
+        Arrays.stream(ennovations).forEach(System.out::println);
+
     }
 }
