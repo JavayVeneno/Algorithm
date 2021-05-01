@@ -54,9 +54,7 @@ public class Student implements Comparable<Student>{
 
     @Override
     public int compareTo(Student o) {
-
         //比较无非就三种情况,小于等于大于,所以需要写三个if,但是我们可以直接return 两者的计算差值,这样更优雅
-
         return this.age - o.age;
     }
 
