@@ -32,6 +32,29 @@ public class SelectionSort {
     }
 
 
+
+
+    // 换个角度去实现选择排序,循环不变量为[0,n]未排序的,(n,length]为排完序的
+    public static <E extends Comparable<E>> void sort2(E[] arr){
+        //假定每排完一次,数组就变短一次,所以将length减去1;
+        int x = arr.length-1;
+        // 循环的时候只循环未排序的部分
+        for (int i = 0;i<x;x--){
+            int maxIndex = i;
+            // 因为循环不变量为[0,n],所以查找的范围就是0~length
+            for(int j = 0;j<=x;j++){
+                if(arr[j].compareTo(arr[maxIndex])>=0){
+                    maxIndex=j;
+                }
+            }
+            swap(arr,maxIndex,x);
+        }
+    }
+
+
+
+
+
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 //        Integer[] arr = {2,5,6,7,1,3,4};
 //        sort(arr,false);
