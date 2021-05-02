@@ -40,7 +40,7 @@ public class LinearSearch {
 //        1000000条数据,run 100次耗时 0.129091s 从这个结果说明,时间复杂度与数据规模成正比;
         int[] pool = {10_000_000,1_000_000};
         for(int n :pool){
-            Integer[] arr = ArrayGenerator.getGenerator(n);
+            Integer[] arr = ArrayGenerator.generatorOrderArray(n);
             long start = System.nanoTime();
             for (int i = 0; i <100 ; i++) {
                 search(arr,n);
