@@ -19,7 +19,7 @@ public class SortingHelper {
             throw new RuntimeException(sortName+" : sort faild ");
         }
         double use = (end-start)/1_000_000_000.0;
-        System.out.printf("%s sort %d data  use %f s %n",sortName,arr.length,use);
+        System.out.printf("%s.sort %d data  use %f s %n",sortName,arr.length,use);
 
     }
 
@@ -32,5 +32,21 @@ public class SortingHelper {
             }
         }
         return true;
+    }
+
+    public static void sortTest(Class<?> sortClass, String method, Integer[] arr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+
+        Method declaredMethod = sortClass.getMethod(method,Comparable[].class);
+
+        long start = System.nanoTime();
+        // 因为invoke方法的入参是(object和一个参数的Object[],所以我们的目标参数Integer[]是一个参数需要转成object(而不是invoke的多个参数)
+        declaredMethod.invoke(sortClass.getName()+"."+method,(Object)arr);
+        long end = System.nanoTime();
+        if(!isSorted(arr)){
+            throw new RuntimeException(sortClass.getName()+"."+method+" : sort faild ");
+        }
+        double use = (end-start)/1_000_000_000.0;
+        System.out.printf("%s sort %d data  use %f s %n",sortClass.getName()+"."+method,arr.length,use);
     }
 }
