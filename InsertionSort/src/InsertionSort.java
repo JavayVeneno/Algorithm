@@ -37,6 +37,24 @@ public class InsertionSort {
         }
     }
 
+    // 换个角度实现
+
+    public static <E extends Comparable<E>> void sort3(E[] arr){
+
+        // arr[0,i)未排序,arr[i,n]已经排序
+        int len = arr.length-1;
+        for (int i = len; i >=0 ; i--) {
+
+            E temp = arr[i];
+            int j;
+            for (j =i; j <len && temp.compareTo(arr[j+1])>0;j++){
+                arr[j]=arr[j+1];
+            }
+            arr[j] =temp;
+        }
+    }
+
+
     private static <E> void swap(E[] arr, int j, int i) {
         E temp = arr[j];
         arr[j] = arr[i];
@@ -55,13 +73,41 @@ public class InsertionSort {
         //InsertionSort.sort 100000 data  use 11.936033 s
         //InsertionSort.sort2 sort 100000 data  use 16.798068 s
         // 两种实现方式,虽然有一定的优化,但是仍然是常数的优化,时间复杂度并没有改变。这个优化是jvm每次交换寻址耗费时间,改成平移数组,最后只做一次赋值
-        for (int n : dataPool) {
-            Integer[] arr = ArrayGenerator.generatorRandomArray(n,n);
-            Integer[] arr2 = Arrays.copyOf(arr,arr.length);
-            SortingHelper.sortTest("InsertionSort",arr);
-            SortingHelper.sortTest(InsertionSort.class,"sort2",arr2);
-        }
+//        for (int n : dataPool) {
+//            Integer[] arr = ArrayGenerator.generatorRandomArray(n,n);
+//            Integer[] arr2 = Arrays.copyOf(arr,arr.length);
+//            SortingHelper.sortTest("InsertionSort",arr);
+//            SortingHelper.sortTest(InsertionSort.class,"sort2",arr2);
+//        }
 
+        // 插入排序法有一个特性就是对于有序数组的排序时,时间复杂度将变为O(n),因为内层的循环依赖arr[j]与arr[j]的比较结果,因为有序,所以比较结果为false,内存循环将卜会执行
+        // 测试有序数组与随机数组的性能,以选择排序和插入排序作为比较参考
+
+
+
+
+        for(int n:dataPool){
+
+            Integer[] orderArray = ArrayGenerator.generatorOrderArray(n);
+            Integer[] oreder2 = Arrays.copyOf(orderArray, orderArray.length);
+
+
+            Integer[] randomArray = ArrayGenerator.generatorRandomArray(n, n);
+            Integer[] random2 = Arrays.copyOf(randomArray, randomArray.length);
+
+
+            System.out.println("ordered array : ");
+            SortingHelper.sortTest("SelectionSort",orderArray);
+            SortingHelper.sortTest("InsertionSort",oreder2);
+            SortingHelper.sortTest(InsertionSort.class,"sort3",oreder2);
+            System.out.println(" ");
+            System.out.println("random array : ");
+            SortingHelper.sortTest("SelectionSort",randomArray);
+            SortingHelper.sortTest("InsertionSort",random2);
+            System.out.println(" ");
+
+
+        }
 
 
 
