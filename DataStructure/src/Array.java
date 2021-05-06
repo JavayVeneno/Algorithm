@@ -1,8 +1,8 @@
-public class Array {
+public class Array<E> {
 
     // 数组底层实现存储
 
-    private int[] data;
+    private E[] data;
 
     // 已存放数据的个数,同时也表示数组第一个未存放数据的位置的索引
 
@@ -10,8 +10,9 @@ public class Array {
 
     // 指定空间的构造方法
 
+    @SuppressWarnings("unchecked")
     public Array(int capacity){
-        data = new int[capacity];
+        data = (E[])new Object[capacity];
         size = 0;
     }
 
@@ -19,6 +20,12 @@ public class Array {
 
     public Array(){
         this(10);
+    }
+
+    //判断数组是否为空
+
+    public boolean isEmpty(){
+        return size == 0;
     }
 
     // 获取当前数组已存放的个数
@@ -35,19 +42,19 @@ public class Array {
 
     // 向数组头部添加元数
 
-    public void addFirst(int e){
+    public void addFirst(E e){
 
         add(0,e);
     }
 
-    public void set(int index, int e) {
+    public void set(int index, E e) {
         if(index<0 || index>=size){
             throw new IllegalArgumentException("set failed . index require >=0 and < data size ");
         }
         data[index] =e;
     }
 
-    public int get(int index) {
+    public E get(int index) {
         if(index<0 || index>=size){
             throw new IllegalArgumentException("get failed . index require >=0 and < data size ");
         }
@@ -56,7 +63,7 @@ public class Array {
 
     // 向数组末尾添加元素
 
-    public void addLast(int e){
+    public void addLast(E e){
         //可以服用add的逻辑
 //        if(size == data.length){
 //            throw new IllegalArgumentException("addLast failed , this data is full . ");
@@ -68,7 +75,7 @@ public class Array {
 
     // 向数组指定位置添加元素,并且其余元素向后移动
 
-    public void add(int index,int e){
+    public void add(int index,E e){
         if(size == data.length){
             throw new IllegalArgumentException("add failed , this data is full . ");
         }
@@ -84,45 +91,47 @@ public class Array {
 
     }
 
-    public int removeFirst(){
+    public E removeFirst(){
         return remove(0);
     }
 
-    public int removeLast(){
+    public E removeLast(){
         return remove(size-1);
     }
 
     // 根据索引删除元素,后面的向前面补进
-    public int remove(int index){
+    public E remove(int index){
         if(index <0 || index >=size){
-            throw new IllegalArgumentException("remove failed , require index >=0 and index <= data.size");
+            throw new IllegalArgumentException("remove failed , require index >=0 and index < data.size");
         }
-        int res = data[index];
+        E res = data[index];
         for (int i = index+1 ; i <size ; i++) {
             data[i-1] = data[i];
         }
         size--;
+        // loitering object  != mem leak 所以我们手动置空可以提示jvm释放内存,但是不释放的逻辑也是对的,这是针对jvm而言
+        data[size]=null;
         return res;
     }
 
-    public void removeElement(int e){
+    public void removeElement(E e){
         int i = find(e);
         if(i != -1){
             remove(i);
         }
     }
 
-    public boolean contains(int e){
+    public boolean contains(E e){
         for (int i = 0; i <size ; i++) {
-            if(e  == data[i]){
+            if(data[i].equals(e)){
                 return true;
             }
         }
         return false;
     }
-    public int find(int e){
+    public int find(E e){
         for (int i = 0; i <size ; i++) {
-            if(e  == data[i]){
+            if( data[i].equals(e)){
                 return i;
             }
         }
@@ -147,28 +156,52 @@ public class Array {
     }
 
     public static void main(String[] args) {
-        Array array = new Array(20);
-        for (int i = 0; i <10 ; i++) {
-            array.addLast(i);
-        }
-        System.out.println(array);
-        array.add(2,100);
-        System.out.println(array);
-        array.addFirst(-1);
-        System.out.println(array);
-        array.set(10,50);
-        System.out.println(array.get(10));
+//        Array<Integer> array = new Array<>(20);
+//        for (int i = 0; i <10 ; i++) {
+//            array.addLast(i);
+//        }
+//        System.out.println(array);
+//        array.add(2,100);
+//        System.out.println(array);
+//        array.addFirst(-1);
+//        System.out.println(array);
+//        array.set(10,50);
+//        System.out.println(array.get(10));
+//
+//        System.out.println(array.contains(50));
+//        System.out.println(array);
+//        array.removeLast();
+//        System.out.println(array);
+//        array.removeFirst();
+//        System.out.println(array);
+//        array.remove(2);
+//        System.out.println(array);
 
-        System.out.println(array.contains(50));
-        System.out.println(array);
-        array.removeLast();
-        System.out.println(array);
-        array.removeFirst();
-        System.out.println(array);
-        array.remove(2);
-        System.out.println(array);
 
-
+        Array<Student> mates = new Array<>(8);
+        Student s1 = new Student(1L,"老刘",30);
+        Student s2 = new Student(2L,"胜英",29);
+        Student s3 = new Student(3L,"云神",28);
+        Student s4 = new Student(4L,"海军",27);
+        System.out.println(mates);
+        mates.addFirst(s1);
+        System.out.println(mates);
+        mates.addLast(s3);
+        mates.addLast(s4);
+        System.out.println(mates);
+        mates.add(1,s2);
+        System.out.println(mates);
+        System.out.println(mates.isEmpty());
+        Student s5 = new Student(5L,"王波",26);
+        System.out.println(mates.find(s5));
+        System.out.println(mates.remove(1));
+        System.out.println(mates);
+        mates.removeFirst();
+        System.out.println(mates);
+        mates.removeLast();
+        System.out.println(mates);
+        mates.removeElement(s4);
+        System.out.println(mates);
     }
 
 
