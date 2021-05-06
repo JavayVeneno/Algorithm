@@ -76,13 +76,15 @@ public class Array<E> {
     // 向数组指定位置添加元素,并且其余元素向后移动
 
     public void add(int index,E e){
-        if(size == data.length){
-            throw new IllegalArgumentException("add failed , this data is full . ");
-        }
+//        if(size == data.length){
+//            throw new IllegalArgumentException("add failed , this data is full . ");
+//        }
         if(index < 0 || index > size ){
             throw new IllegalArgumentException("add failed , require index >=0 and index <= data.size");
         }
-
+        if(size == data.length){
+            resize(data.length<<1);
+        }
         for (int i = size-1; i >= index ; i--) {
             data[i+1]=data[i];
         }
@@ -90,6 +92,7 @@ public class Array<E> {
         size++;
 
     }
+
 
     public E removeFirst(){
         return remove(0);
@@ -111,6 +114,9 @@ public class Array<E> {
         size--;
         // loitering object  != mem leak 所以我们手动置空可以提示jvm释放内存,但是不释放的逻辑也是对的,这是针对jvm而言
         data[size]=null;
+        if(size == data.length>>1){
+            resize(data.length>>1);
+        }
         return res;
     }
 
@@ -154,6 +160,17 @@ public class Array<E> {
         sb.append("]");
         return sb.toString();
     }
+    // 换容操作
+    @SuppressWarnings("unchecked")
+    private void resize(int newCapacity) {
+
+        E[] newData = (E[]) new Object[newCapacity];
+        for (int i = 0; i <size ; i++) {
+            newData[i] = data[i];
+        }
+        data = newData;
+    }
+
 
     public static void main(String[] args) {
 //        Array<Integer> array = new Array<>(20);
@@ -178,7 +195,7 @@ public class Array<E> {
 //        System.out.println(array);
 
 
-        Array<Student> mates = new Array<>(8);
+        Array<Student> mates = new Array<>(2);
         Student s1 = new Student(1L,"老刘",30);
         Student s2 = new Student(2L,"胜英",29);
         Student s3 = new Student(3L,"云神",28);
@@ -202,6 +219,9 @@ public class Array<E> {
         System.out.println(mates);
         mates.removeElement(s4);
         System.out.println(mates);
+        System.out.println(mates.remove(0));
+        System.out.println(mates);
+
     }
 
 
