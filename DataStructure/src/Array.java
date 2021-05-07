@@ -176,6 +176,14 @@ public class Array<E> {
     }
 
 
+    public E getLast() {
+        return get(size-1);
+    }
+
+    public E getFirst() {
+        return get(0);
+    }
+
     public static void main(String[] args) {
 //        Array<Integer> array = new Array<>(20);
 //        for (int i = 0; i <10 ; i++) {
