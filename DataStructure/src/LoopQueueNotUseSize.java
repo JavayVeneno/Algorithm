@@ -49,8 +49,8 @@ public class LoopQueueNotUseSize<E> implements Queue<E> {
     private void resize(int capacity) {
         E[] newData = (E[]) new Object[capacity+1];
         int sz = getSize();
-        for (int i = front; i%data.length != tail%data.length ; i++) {
-            newData[(i-front)] = data[i%data.length];
+        for (int i = 0; i<getSize() ; i++) {
+            newData[i] = data[(i+front)%data.length];
         }
         front = 0;
         tail =sz;
@@ -90,7 +90,7 @@ public class LoopQueueNotUseSize<E> implements Queue<E> {
 //        }
 
         for (int i = 0; i <getSize() ; i++) {
-            sb.append((i+front)%data.length);
+            sb.append(data[(i+front)%data.length]);
             if ((i+front)%data.length+1 != tail){
                 sb.append(',');
             }
