@@ -1,17 +1,17 @@
-public class LoopQueque<E> implements Queue<E> {
+public class LoopQueue<E> implements Queue<E> {
 
     private E[] data;
     private int front,tail,size;
 
-    @SuppressWarnings("unckecked")
-    public LoopQueque(int capacity){
+    @SuppressWarnings("unchecked")
+    public LoopQueue(int capacity){
         data = (E[]) new Object[capacity+1];
         front = 0;
         tail = 0;
         size = 0;
     }
 
-    public LoopQueque(){
+    public LoopQueue(){
         this(10);
     }
 
@@ -44,6 +44,7 @@ public class LoopQueque<E> implements Queue<E> {
         size++;
     }
 
+    @SuppressWarnings("unchecked")
     private void resize(int capacity) {
         E[] newData = (E[]) new Object[capacity+1];
         for (int i = 0; i < size ; i++) {
@@ -94,7 +95,7 @@ public class LoopQueque<E> implements Queue<E> {
     }
 
     public static void main(String[] args) {
-        LoopQueque<Integer> queue = new LoopQueque<>(3);
+        LoopQueue<Integer> queue = new LoopQueue<>(3);
         for (int i = 0; i < 10 ; i++) {
             queue.enqueque(i);
             System.out.println(queue);
