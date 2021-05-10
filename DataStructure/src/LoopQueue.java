@@ -35,7 +35,7 @@ public class LoopQueue<E> implements Queue<E> {
     }
 
     @Override
-    public void enqueque(E e) {
+    public void enqueue(E e) {
         if((tail+1)%data.length==front){
             resize(getCapacity()<<1);
         }
@@ -56,7 +56,7 @@ public class LoopQueue<E> implements Queue<E> {
     }
 
     @Override
-    public E dequeque() {
+    public E dequeue() {
         if(isEmpty()){
             throw new IllegalArgumentException("cannot dequeue from an empty queue");
         }
@@ -97,10 +97,10 @@ public class LoopQueue<E> implements Queue<E> {
     public static void main(String[] args) {
         LoopQueue<Integer> queue = new LoopQueue<>(3);
         for (int i = 0; i < 10 ; i++) {
-            queue.enqueque(i);
+            queue.enqueue(i);
             System.out.println(queue);
             if(i%3 == 2){
-                queue.dequeque();
+                queue.dequeue();
                 System.out.println(queue);
             }
 

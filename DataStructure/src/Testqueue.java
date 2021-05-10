@@ -8,10 +8,10 @@ public class Testqueue {
         Random random = new Random();
         long start = System.nanoTime();
         for (int i = 0; i < optCount; i++) {
-            q.enqueque(random.nextInt(Integer.MAX_VALUE));
+            q.enqueue(random.nextInt(Integer.MAX_VALUE));
         }
         for (int i = 0; i <optCount ; i++) {
-            q.dequeque();
+            q.dequeue();
         }
 
         long end = System.nanoTime();
@@ -23,8 +23,9 @@ public class Testqueue {
         int optCount = 500000;
         ArrayQueue<Integer> arrayQueue = new ArrayQueue<>();
         LoopQueue<Integer> loopQueue = new LoopQueue<>();
+        LoopQueueNotUseSize<Integer> loopQueueNotUseSpace = new LoopQueueNotUseSize<>();
         double loopTime = testQueue(loopQueue, optCount);
-        double arrayTime = testQueue(arrayQueue, optCount);
+        double arrayTime = testQueue(loopQueueNotUseSpace, optCount);
 
         //LoopQueue use 0.015788 s
         //ArrayQueue use 3.408632 s

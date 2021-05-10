@@ -31,14 +31,14 @@ public class LoopQueueNotUseSize<E> implements Queue<E> {
     @Override
     public E getFront() {
         if(isEmpty()){
-            throw new IllegalArgumentException("cannot dequeue from an empty queue");
+            throw new IllegalArgumentException("cannot getFront from an empty queue");
         }
         return data[front];
     }
 
     @Override
-    public void enqueque(E e) {
-        if(tail%data.length+1==front){
+    public void enqueue(E e) {
+        if((tail+1)%data.length==front){
             resize(getCapacity()<<1);
         }
         data[tail]=e;
@@ -59,7 +59,7 @@ public class LoopQueueNotUseSize<E> implements Queue<E> {
     }
 
     @Override
-    public E dequeque() {
+    public E dequeue() {
         if(isEmpty()){
             throw new IllegalArgumentException("cannot dequeue from an empty queue");
         }
@@ -102,10 +102,10 @@ public class LoopQueueNotUseSize<E> implements Queue<E> {
     public static void main(String[] args) {
         LoopQueueNotUseSize<Integer> queue = new LoopQueueNotUseSize<>(10);
         for (int i = 0; i < 10 ; i++) {
-            queue.enqueque(i);
+            queue.enqueue(i);
             System.out.println(queue);
             if(i%3 == 2){
-                queue.dequeque();
+                queue.dequeue();
                 System.out.println(queue);
             }
 
