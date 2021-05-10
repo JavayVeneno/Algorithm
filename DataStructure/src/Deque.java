@@ -109,11 +109,13 @@ public class Deque<E> {
 //            }
 //        }
 
-        for (int i = front; i != tail ; i=(i+1)%data.length) {
-            sb.append(data[i]);
-            if((i+1)%data.length !=tail){
-                sb.append(',');
-            }        }
+        for(int i = 0 ; i < size ; i ++){
+            sb.append(data[(i + front) % data.length]);
+            if(i != size - 1) {
+                sb.append(", ");
+            }
+        }
+
         sb.append("] tail");
         return sb.toString();
 
@@ -124,14 +126,14 @@ public class Deque<E> {
         for (int i = 0; i < 10 ; i++) {
             deque.addFirst(i);
             System.out.println(deque);
-//            if(i%3 == 2){
-//                deque.removeLast();
-//                System.out.println(deque);
-//            }
+            if(i%3 == 2){
+                deque.removeLast();
+                System.out.println(deque);
+            }
 
 
         }
-//        System.out.println(deque);
+        System.out.println(deque);
     }
 
 }
