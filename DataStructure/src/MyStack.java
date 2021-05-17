@@ -1,6 +1,4 @@
 import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Queue;
 
 class MyStack<E> {
 
@@ -19,11 +17,15 @@ class MyStack<E> {
     /** Push element x onto stack. */
     public void push(E x) {
 
+        //TODO 该方法时间复杂度为O(n²)需要优化
+
         if(a.isEmpty()){
             addLast(x, a, b);
         }else {
             addLast(x, b, a);
         }
+
+
     }
 
     private void addLast(E x, ArrayDeque<E> add, ArrayDeque<E> move) {
