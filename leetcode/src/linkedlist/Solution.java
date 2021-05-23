@@ -13,20 +13,30 @@ package linkedlist;
 class Solution {
     public ListNode removeElements(ListNode head, int val) {
 
-        // 先解决头部,再解决其他
+        // 使用虚拟头节点
 
-        while(head != null && head.val==val){
-            ListNode del =head;
-            head = head.next;
-            del.next = null;
-        }
-        if(head == null){
-            return null;
-        }
+        ListNode dummyHead = new ListNode(-1,head);
 
-        ListNode prev = head;
+
+
+//        // 先解决头部,再解决其他
+//
+//        while(head != null && head.val==val){
+//            ListNode del =head;
+//            head = head.next;
+//            del.next = null;
+//        }
+//        if(head == null){
+//            return null;
+//        }
+
+        ListNode prev = dummyHead;
         while(prev.next != null ){
             if(prev.next.val == val){
+
+                //算法是解决方案不考虑loitering对象,所以可以不去释放del.next引用
+                // 所以下面三行代码可以改成这样: prev.next = prev.next.next;
+
                 ListNode del = prev.next;
                 prev.next = del.next;
                 del.next = null;
@@ -34,7 +44,7 @@ class Solution {
                 prev = prev.next;
             }
         }
-        return head;
+        return dummyHead.next;
 
     }
 
