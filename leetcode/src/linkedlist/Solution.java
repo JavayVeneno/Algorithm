@@ -50,8 +50,13 @@ class Solution {
 
 
     public static void main(String[] args) {
-        ListNode l1 = new ListNode(1,new ListNode(2,new ListNode(3,new ListNode(6,new ListNode(4,new ListNode(5,new ListNode(6)))))));
+        // 这种写法太扯了,我们尝试一下给他增加一个构造方法,入参是数组
+        // ListNode l1 = new ListNode(1,new ListNode(2,new ListNode(3,new ListNode(6,new ListNode(4,new ListNode(5,new ListNode(6)))))));
+        int[] arr = {1,2,3,6,4,5,6};
+        ListNode l1 = new ListNode(arr);
         Solution s = new Solution();
+        System.out.println(l1);
+
         s.removeElements(l1,6);
         System.out.println(l1);
     }
