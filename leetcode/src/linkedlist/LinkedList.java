@@ -1,6 +1,7 @@
 package linkedlist;
 
 import java.util.Objects;
+import javafx.util.Pair;
 
 public class LinkedList<E> {
 
@@ -102,14 +103,26 @@ public class LinkedList<E> {
 
     // 时间复杂度分析,O(n)
     public E get(int index){
-        if(index < 0 || index > size){
+        if(index < 0 || index >= size){
             throw new RuntimeException("can not get with wrong index");
         }
-        Node current = dummyHead.next;
-        for (int i = 0; i <index ; i++) {
-            current = current.next;
-        }
+//        Node current = dummyHead.next;
+//        for (int i = 0; i <index ; i++) {
+//            current = current.next;
+//        }
+//        return current.e;
+    //改用递归来查找
+        Node current = getNodeByIndex(index,dummyHead.next);
         return current.e;
+
+    }
+    public Node getNodeByIndex(int index,Node head){
+
+        if(index == 0 ){
+            return head;
+        }
+        return getNodeByIndex(--index,head.next);
+
     }
 
     public E getFirst(){
@@ -121,19 +134,69 @@ public class LinkedList<E> {
     }
 
     public void set(int index,E e){
-        if(index < 0 || index > size){
+        if(index < 0 || index >= size){
             throw new RuntimeException("can not set with wrong index");
         }
+        Node head = dummyHead.next;
+       dummyHead.next = setNode(index,head,e);
 
+
+    }
+
+    private Node setNode(int index, Node head ,E e) {
+
+        if(index == 0 ){
+            head.e = e;
+            return head;
+        }
+
+        head.next = setNode(--index,head.next,e);
+        return head;
     }
 
     public boolean contains(E e){
-        return false;
+
+        //使用递归
+      return containsByNode(e,dummyHead.next);
     }
+
+    private boolean containsByNode(E e, Node head) {
+
+
+        if(head == null ){
+            return false;
+        }
+        if( Objects.equals(head.e,e)){
+            return true;
+        }
+
+        return containsByNode(e,head.next);
+    }
+
 
     // 时间复杂度分析,O(n)
     public E remove(int index){
-        return null;
+        if(index < 0 || index >= size){
+            throw new RuntimeException("can not remove with wrong index");
+        }
+        Pair<Node,E> pair= removeByIndexFromNode(index, dummyHead.next);
+        dummyHead.next = pair.getKey();
+        if(pair.getKey() == null){
+            return null;
+        }
+        size--;
+        return pair.getValue();
+    }
+
+    private Pair<Node, E> removeByIndexFromNode(int index, Node head){
+
+        if(index == 0){
+            return new Pair<>(head.next,head.e);
+        }
+        Pair<Node, E> nodeEPair = removeByIndexFromNode(--index, head.next);
+        head.next =nodeEPair.getKey();
+        E x = nodeEPair.getValue();
+        return new Pair<>(head,x);
     }
 
     public E removeFirst(){
@@ -166,6 +229,15 @@ public class LinkedList<E> {
             linkedList.addLast(i);
 //            System.out.println(linkedList);
         }
+        System.out.println(linkedList.removeLast());
+        System.out.println(linkedList.removeFirst());
+        System.out.println(linkedList);
+
+        System.out.println(linkedList.getLast());
+        System.out.println(linkedList.getFirst());
+        linkedList.set(2,4);
+        linkedList.set(1,66);
+        System.out.println(linkedList.contains(4));
 //        linkedList.add(2,666);
 //        System.out.println(linkedList);
 //        linkedList.add(2,666);

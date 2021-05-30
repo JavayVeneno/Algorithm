@@ -108,7 +108,7 @@ public class LinkedList<E> {
 
     // 时间复杂度分析,O(n)
     public void set(int index,E e){
-        if(index < 0 || index > size){
+        if(index < 0 || index >= size){
             throw new RuntimeException("can not set with wrong index");
         }
         Node current = dummyHead.next;
@@ -133,7 +133,7 @@ public class LinkedList<E> {
 
     // 时间复杂度分析,O(n)
     public E remove(int index){
-        if(index < 0 || index > size){
+        if(index < 0 || index >= size){
             throw new RuntimeException("can not remove with wrong index");
         }
         Node prev = dummyHead;
