@@ -107,13 +107,19 @@ public class MergeSort {
     }
 
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int[] dataPool ={10};
+        int[] dataPool ={10000,100000};
 
         for (int n : dataPool) {
-//            Integer[] arr = ArrayGenerator.generatorRandomArray(n, n);
-            Integer[] arr = {1,3,5,2,4,6};
-            SortingHelper.sortTest("MergeSort",arr);
+           Integer[] arr = ArrayGenerator.generatorRandomArray(n, n);
+           Integer[] x = Arrays.copyOf(arr,arr.length);
 
+//           Integer[] arr = {1,3,5,2,4,6};
+            SortingHelper.sortTest("MergeSort",arr);
+            long start = System.nanoTime();
+            Arrays.sort(x);
+            long end = System.nanoTime();
+            double use = (end-start)/1_000_000_000.0;
+            System.out.printf("%s.sort %d data  use %f s %n","Arrays.sort",arr.length,use);
 //            mergeLOrderedArray(arr,0,2,5);
 //            System.out.println(arr);
         }
