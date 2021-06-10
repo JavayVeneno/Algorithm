@@ -24,6 +24,29 @@ public class MergeSort {
         merge(arr,start,middle,end);
     }
 
+
+    public static <E extends Comparable<E>> void sort2(E[] arr){
+
+        // mergeSort(arr,0,arr.length-1);
+        sort2(arr,0,arr.length-1);
+
+    }
+
+    public static <E extends Comparable<E>> void sort2(E[] arr,int start,int end){
+
+        if(end<=start){
+            return;
+        }
+
+        int middle = (start+end)/2;
+        sort2(arr,start,middle);
+        sort2(arr,middle+1,end);
+        if(arr[middle].compareTo(arr[middle+1])>0){
+            merge(arr,start,middle,end);
+        }
+
+    }
+
     /**
      *  搞清楚需要合并的是那部分
      *  需要合并的是数组[start,end]这个区间,所以for循环应该是从start开始到end结束,左闭右闭
@@ -106,20 +129,32 @@ public class MergeSort {
         }
     }
 
+    // 测试了MergerSort的时间复杂度为O(nlogn),
+    // 但是对于一个有序数组或者说需要合并的两个有序区间右边最小大于左边最大,
+    // 是否没有必要在循环比较每个元素了
+    // 我们尝试用sort来看一下优化效果
+
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int[] dataPool ={10000,100000};
+        int[] dataPool ={10,100,1000,10000};
 
         for (int n : dataPool) {
-           Integer[] arr = ArrayGenerator.generatorRandomArray(n, n);
+//           Integer[] arr = ArrayGenerator.generatorRandomArray(n, n);
+           Integer[] arr = ArrayGenerator.generatorOrderArray(n);
            Integer[] x = Arrays.copyOf(arr,arr.length);
+           Integer[] x1= Arrays.copyOf(arr,arr.length);
+           Integer[] x2 = Arrays.copyOf(arr,arr.length);
 
 //           Integer[] arr = {1,3,5,2,4,6};
             SortingHelper.sortTest("MergeSort",arr);
+            SortingHelper.sortTest(MergeSort.class,"sort2",x1);
+//            SortingHelper.sortTest("SelectionSort",x2);
+
+
             long start = System.nanoTime();
             Arrays.sort(x);
             long end = System.nanoTime();
             double use = (end-start)/1_000_000_000.0;
-            System.out.printf("%s.sort %d data  use %f s %n","Arrays.sort",arr.length,use);
+            System.out.printf("%s.sort %d data  use %f s %n","Arrays.sort ",arr.length,use);
 //            mergeLOrderedArray(arr,0,2,5);
 //            System.out.println(arr);
         }
