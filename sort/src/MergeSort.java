@@ -5,6 +5,9 @@ public class MergeSort {
 
     private MergeSort(){}
 
+
+
+
     public static <E extends Comparable<E>> void sort(E[] arr){
 
         // mergeSort(arr,0,arr.length-1);
@@ -12,7 +15,7 @@ public class MergeSort {
 
     }
 
-    public static <E extends Comparable<E>> void sort(E[] arr,int start,int end){
+    private static <E extends Comparable<E>> void sort(E[] arr,int start,int end){
 
         if(end<=start){
             return;
@@ -21,7 +24,10 @@ public class MergeSort {
         int middle = (start+end)/2;
         sort(arr,start,middle);
         sort(arr,middle+1,end);
-        merge(arr,start,middle,end);
+        if(arr[middle].compareTo(arr[middle+1])>0){
+            merge(arr,start,middle,end);
+        }
+
     }
 
 
@@ -32,7 +38,7 @@ public class MergeSort {
 
     }
 
-    public static <E extends Comparable<E>> void sort2(E[] arr,int start,int end){
+    private static <E extends Comparable<E>> void sort2(E[] arr,int start,int end){
 
         if(end<=start){
             return;
@@ -41,11 +47,45 @@ public class MergeSort {
         int middle = (start+end)/2;
         sort2(arr,start,middle);
         sort2(arr,middle+1,end);
+        merge(arr,start,middle,end);
+    }
+
+    public static <E extends Comparable<E>> void sort3(E[] arr){
+
+        // mergeSort(arr,0,arr.length-1);
+        sort3(arr,0,arr.length-1);
+
+    }
+
+    private static <E extends Comparable<E>> void sort3(E[] arr,int start,int end){
+
+        if(end-start<=15){
+            insertSort(arr,start,end);
+            return;
+        }
+
+        int middle = (start+end)/2;
+        sort3(arr,start,middle);
+        sort3(arr,middle+1,end);
         if(arr[middle].compareTo(arr[middle+1])>0){
             merge(arr,start,middle,end);
         }
+    }
+
+    private static  <E extends Comparable<E>> void  insertSort(E[] arr, int start, int end) {
+
+        for (int i = start; i <= end; i++) {
+
+            E tmp = arr[i];
+            int j;
+            for (j = i ;j -1 >= start && tmp.compareTo(arr[j-1])<0 ; j--) {
+                arr[j] = arr[j-1];
+            }
+            arr[j] = tmp;
+        }
 
     }
+
 
     /**
      *  搞清楚需要合并的是那部分
@@ -135,11 +175,11 @@ public class MergeSort {
     // 我们尝试用sort来看一下优化效果
 
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int[] dataPool ={10,100,1000,10000};
+        int[] dataPool ={10,100,1000,500000,5000000};
 
         for (int n : dataPool) {
-//           Integer[] arr = ArrayGenerator.generatorRandomArray(n, n);
-           Integer[] arr = ArrayGenerator.generatorOrderArray(n);
+           Integer[] arr = ArrayGenerator.generatorRandomArray(n, n);
+//           Integer[] arr = ArrayGenerator.generatorOrderArray(n);
            Integer[] x = Arrays.copyOf(arr,arr.length);
            Integer[] x1= Arrays.copyOf(arr,arr.length);
            Integer[] x2 = Arrays.copyOf(arr,arr.length);
@@ -147,6 +187,7 @@ public class MergeSort {
 //           Integer[] arr = {1,3,5,2,4,6};
             SortingHelper.sortTest("MergeSort",arr);
             SortingHelper.sortTest(MergeSort.class,"sort2",x1);
+            SortingHelper.sortTest(MergeSort.class,"sort3",x2);
 //            SortingHelper.sortTest("SelectionSort",x2);
 
 
