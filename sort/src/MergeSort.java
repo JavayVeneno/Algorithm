@@ -245,7 +245,7 @@ public class MergeSort {
             SortingHelper.sortTest("MergeSort",arr);
             SortingHelper.sortTest(MergeSort.class,"sort2",x2);
             SortingHelper.sortTest(MergeSort.class,"sort3",x1);
-            SortingHelper.sortTest(MergeSort.class,"sort4",x3);
+            SortingHelper.sortTest(MergeSort.class,"sort5",x3);
 //            SortingHelper.sortTest("SelectionSort",x2);
 
 
@@ -258,5 +258,38 @@ public class MergeSort {
 //            System.out.println(arr);
         }
     }
+
+
+
+    public static <E extends Comparable<E>> void sort5(E[] arr){
+
+        E[] base = Arrays.copyOf(arr,arr.length);
+        sort5(arr,base);
+
+
+    }
+    private static <E extends Comparable<E>> void sort5(E[] arr,E[] base){
+
+
+        // 先每次选中一个数组,再每次选中两个数组,再选中四个数组,直到选中的数字大于数组长度
+        // 第一次是每个数组比较后进行merge,然后再每两个数组进行比较,再四个数组进行比较,但是最后可能会剩下一堆不足2 n次方,但他们已经有序了
+
+        int n = arr.length;
+        // sz即是每次操作的数组的长度,一开始是每个数组,其中只有一个元素,处理完一次就是翻倍的长度
+        for (int sz = 1; sz < n; sz+=sz) {
+            //从0开始处理到第一个sz,继续处理到第2个sz,即处理两个数组
+            // [i,i+size-1],[i+size,i+size+size-1]
+            for (int i = 0;i+sz<n; i+=sz+sz) {
+                if(arr[i+sz-1].compareTo(arr[i+sz])>0){
+                    merge4(arr,i,i+sz-1,Math.min(i+sz+sz-1,n-1),base);
+
+                }
+            }
+        }
+
+    }
+
+
+
 
 }
