@@ -245,7 +245,7 @@ public class MergeSort {
             SortingHelper.sortTest("MergeSort",arr);
             SortingHelper.sortTest(MergeSort.class,"sort2",x2);
             SortingHelper.sortTest(MergeSort.class,"sort3",x1);
-            SortingHelper.sortTest(MergeSort.class,"sort5",x3);
+            SortingHelper.sortTest(MergeSort.class,"sort6",x3);
 //            SortingHelper.sortTest("SelectionSort",x2);
 
 
@@ -289,6 +289,33 @@ public class MergeSort {
 
     }
 
+
+    public static <E extends Comparable<E>> void sort6(E[] arr){
+
+        E[] base = Arrays.copyOf(arr,arr.length);
+        sort6(arr,base);
+
+
+    }
+    private static <E extends Comparable<E>> void sort6(E[] arr,E[] base){
+        int n = arr.length;
+        // 遍历一遍，对所有每16个元素使用插入排序 即 arr[k, i=k + 15] 的区间，使用插入排序法
+        for (int k = 0; k < n; k+=16) {
+            insertSort(arr,k,Math.min(n-1,k+15));
+        }
+        //每组从16开始,连续两组,依次翻倍
+        for (int sz = 16; sz < n; sz+=sz) {
+
+            // [i,i+size-1],[i+size,i+size+size-1]
+            for (int i = 0;i+sz<n; i+=sz+sz) {
+                if(arr[i+sz-1].compareTo(arr[i+sz])>0){
+                    merge4(arr,i,i+sz-1,Math.min(i+sz+sz-1,n-1),base);
+
+                }
+            }
+        }
+
+    }
 
 
 
