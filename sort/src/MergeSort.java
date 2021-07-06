@@ -29,7 +29,7 @@ public class MergeSort {
             return;
         }
 
-        int middle = (start+end)/2;
+        int middle = start+(end-start)/2;
         sort4(arr,start,middle,base);
         sort4(arr,middle+1,end,base);
         if(arr[middle].compareTo(arr[middle+1])>0){
@@ -245,7 +245,7 @@ public class MergeSort {
             SortingHelper.sortTest("MergeSort",arr);
             SortingHelper.sortTest(MergeSort.class,"sort2",x2);
             SortingHelper.sortTest(MergeSort.class,"sort3",x1);
-            SortingHelper.sortTest(MergeSort.class,"sort6",x3);
+            SortingHelper.sortTest(MergeSort.class,"sort4",x3);
 //            SortingHelper.sortTest("SelectionSort",x2);
 
 
