@@ -9,6 +9,21 @@ public class QuickSort {
         quickSort(arr,0,arr.length-1);
     }
 
+    //自己优化时,再标定完之后对标定点左右部分判断元素个数小于等于16使用插入排序
+    public static  <E extends Comparable<E>> void  sort2(E[] arr){
+        quickSort2(arr,0,arr.length-1);
+    }
+
+    //别人的优化,直接判断整个数组如果小于16就先插入排序否则就进行quick sort
+    public static  <E extends Comparable<E>> void  sort3(E[] arr){
+        quickSort3(arr,0,arr.length-1);
+    }
+
+    //别人的优化,直接判断整个数组如果小于8就先插入排序否则进行quick sort
+    public static  <E extends Comparable<E>> void  sort4(E[] arr){
+        quickSort4(arr,0,arr.length-1);
+    }
+
     private static <E extends Comparable<E>>  void quickSort(E[] arr, int l, int r) {
         if(r<=l){
             return;
@@ -17,6 +32,43 @@ public class QuickSort {
         quickSort(arr,l,p-1);
         quickSort(arr,p+1,r);
     }
+    private static <E extends Comparable<E>>  void quickSort2(E[] arr, int l, int r) {
+        if(r<=l){
+            return;
+        }
+        int p = partition(arr,l,r);
+        if(p-l<=16){
+            insertSort(arr,l,p-1);
+        }else{
+            quickSort(arr,l,p-1);
+        }
+        if(r-p<=16){
+            insertSort(arr,p+1,r);
+        }else{
+            quickSort(arr,p+1,r);
+
+        }
+    }
+
+    private static <E extends Comparable<E>>  void quickSort3(E[] arr, int l, int r) {
+        if(r-l<=16){
+            insertSort(arr,l,r);
+            return;
+        }
+        int p = partition(arr,l,r);
+        quickSort(arr,l,p-1);
+        quickSort(arr,p+1,r);
+    }
+    private static <E extends Comparable<E>>  void quickSort4(E[] arr, int l, int r) {
+        if(r-l<=8){
+            insertSort(arr,l,r);
+            return;
+        }
+        int p = partition(arr,l,r);
+        quickSort(arr,l,p-1);
+        quickSort(arr,p+1,r);
+    }
+
 
     public  static <E extends Comparable<E>> int partition(E[] arr, int l, int r) {
 
@@ -40,12 +92,24 @@ public class QuickSort {
             arr[x] = arr[y];
             arr[y] = temp;
     }
+    private static  <E extends Comparable<E>> void  insertSort(E[] arr, int start, int end) {
 
+        for (int i = start; i <= end; i++) {
+
+            E tmp = arr[i];
+            int j;
+            for (j = i ;j -1 >= start && tmp.compareTo(arr[j-1])<0 ; j--) {
+                arr[j] = arr[j-1];
+            }
+            arr[j] = tmp;
+        }
+
+    }
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
 
-        Integer[] arrs = ArrayGenerator.generatorRandomArray(1000000,1000000);
+        Integer[] arrs = ArrayGenerator.generatorRandomArray(1000000 ,1000000 );
         Integer[] arrs2 = Arrays.copyOf(arrs, arrs.length);
         Integer[] arrs3 = Arrays.copyOf(arrs, arrs.length);
         Integer[] arrs4 = Arrays.copyOf(arrs, arrs.length);
@@ -53,9 +117,9 @@ public class QuickSort {
         Integer[] arrs6 = Arrays.copyOf(arrs, arrs.length);
         Integer[] arrs7 = Arrays.copyOf(arrs, arrs.length);
         SortingHelper.sortTest(QuickSort.class,"sort",arrs);
-        SortingHelper.sortTest(MergeSort.class,"sort",arrs2);
-        SortingHelper.sortTest(MergeSort.class,"sort6",arrs3);
-        SortingHelper.sortTest(MergeSort.class,"sort3",arrs4);
+        SortingHelper.sortTest(QuickSort.class,"sort2",arrs2);
+        SortingHelper.sortTest(QuickSort.class,"sort3",arrs3);
+        SortingHelper.sortTest(QuickSort.class,"sort4",arrs4);
         SortingHelper.sortTest(MergeSort.class,"sort4",arrs5);
         SortingHelper.sortTest(MergeSort.class,"sort5",arrs6);
         SortingHelper.sortTest(MergeSort.class,"sort2",arrs7);
