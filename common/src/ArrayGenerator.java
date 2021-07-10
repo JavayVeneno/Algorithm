@@ -26,6 +26,19 @@ public class ArrayGenerator {
 
     // 生成一组数据在quick sort每次选用最中间的标定点都为此时的最小值
 
+    public static Integer[] generatorArraySame(int n){
+
+        Integer[] arr = new Integer[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i]=0;
+        }
+
+        return arr;
+    }
+
+    // 生成一组相同值
+
     public static Integer[] generatorArrayPartition(int n){
 
         Integer[] arr = new Integer[n];

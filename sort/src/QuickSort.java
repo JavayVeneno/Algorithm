@@ -4,36 +4,42 @@ import java.util.Random;
 
 public class QuickSort {
 
-    static Random random;
+    private static Random random;
     private QuickSort(){}
     static{
         random = new Random();
     }
 
+    // 双路快排
     public static  <E extends Comparable<E>> void  sort(E[] arr){
         quickSort(arr,0,arr.length-1);
     }
 
-    //自己优化时,再标定完之后对标定点左右部分判断元素个数小于等于16使用插入排序
+    //单路快排 自己优化时,再标定完之后对标定点左右部分判断元素个数小于等于16使用插入排序
     public static  <E extends Comparable<E>> void  sort2(E[] arr){
         quickSort2(arr,0,arr.length-1);
     }
 
-    //别人的优化,直接判断整个数组如果小于16就先插入排序否则就进行quick sort
+    //单路快排 别人的优化,直接判断整个数组如果小于16就先插入排序否则就进行quick sort
     public static  <E extends Comparable<E>> void  sort3(E[] arr){
         quickSort3(arr,0,arr.length-1);
     }
 
-    //别人的优化,直接判断整个数组如果小于8就先插入排序否则进行quick sort
+    //单路快排 别人的优化,直接判断整个数组如果小于8就先插入排序否则进行quick sort
     public static  <E extends Comparable<E>> void  sort4(E[] arr){
         quickSort4(arr,0,arr.length-1);
+    }
+
+    // 单路快排
+    public static  <E extends Comparable<E>> void  sortSingle(E[] arr){
+        quickSort5(arr,0,arr.length-1);
     }
 
     private static <E extends Comparable<E>>  void quickSort(E[] arr, int l, int r) {
         if(r<=l){
             return;
         }
-        int p = partition(arr,l,r);
+        int p = partitionDouble(arr,l,r);
         quickSort(arr,l,p-1);
         quickSort(arr,p+1,r);
     }
@@ -45,12 +51,12 @@ public class QuickSort {
         if(p-l<=16){
             insertSort(arr,l,p-1);
         }else{
-            quickSort(arr,l,p-1);
+            quickSort2(arr,l,p-1);
         }
         if(r-p<=16){
             insertSort(arr,p+1,r);
         }else{
-            quickSort(arr,p+1,r);
+            quickSort2(arr,p+1,r);
 
         }
     }
@@ -61,8 +67,8 @@ public class QuickSort {
             return;
         }
         int p = partition(arr,l,r);
-        quickSort(arr,l,p-1);
-        quickSort(arr,p+1,r);
+        quickSort3(arr,l,p-1);
+        quickSort3(arr,p+1,r);
     }
     private static <E extends Comparable<E>>  void quickSort4(E[] arr, int l, int r) {
         if(r-l<=8){
@@ -70,10 +76,72 @@ public class QuickSort {
             return;
         }
         int p = partition(arr,l,r);
-        quickSort(arr,l,p-1);
-        quickSort(arr,p+1,r);
+        quickSort4(arr,l,p-1);
+        quickSort4(arr,p+1,r);
     }
 
+    private static <E extends Comparable<E>>  void quickSort5(E[] arr, int l, int r) {
+        if(l>=r){
+            return;
+        }
+        int p = partition(arr,l,r);
+        quickSort5(arr,l,p-1);
+        quickSort5(arr,p+1,r);
+    }
+
+
+    private  static <E extends Comparable<E>> int partitionZZL(E[] arr, int l, int r) {
+        int p = l + random.nextInt(r-l+1);
+        swap(arr,p,l);
+        E pivot = arr[l];
+        while (l < r) {
+            while (l < r && arr[r] .compareTo(pivot)>= 0) {
+                r--;
+            }
+            arr[l] = arr[r];
+            while (l < r && arr[l].compareTo(pivot) <= 0) {
+                l++;
+            }
+            arr[r] = arr[l];
+        }
+        arr[l] = pivot;
+        return l;
+    }
+
+    //双路快排的partition
+
+    private  static <E extends Comparable<E>> int partitionDouble(E[] arr, int l, int r) {
+        // 双路快排的核心思想是partition中,从两端开始筛选,左端大于等于第一个元素,执行右端,右端小于等于第一个元素,与左端交换
+        // 即将数组划分位三部分 l=part , [l,i-1]<=part ,[j+1,r]>=part;
+        // 不变的逻辑是将随机选取一个一个元素作为标定点,与第一个点做 交换。
+        int p = l+random.nextInt(r-l+1);
+        swap(arr,l,p);
+        E part = arr[l];
+        int i=l+1,j=r;
+        while(true){
+            // 当i开始的循环还能继续循环时(即仍有未扫描的元素),将当前元素与part比较
+            // 尊重[l,i-1]<=part,[j+1,r]>=part的逻辑
+            while (i<=j && arr[i].compareTo(part)<0){
+                // 因为大于等于part的都要扔到[j+1,r]的区间,所以小于part的就继续循环
+                i++;
+            }
+            while (j>=i && arr[j].compareTo(part)>0){
+                // 因为小于等于part的都要扔到[l,i-1]的区间,所以大于part的就继续循环
+                j--;
+            }
+            // 如果 j<i 或者j=i了,说明已经循环完所有元素了,需要break
+            if(j<=i){
+                break;
+            }
+            // 没有循环完,则需要将两次循环选中的元素交换,然后使循环继续
+            swap(arr,i,j);
+            //不能重复上次的循环
+            i++;
+            j--;
+        }
+        swap(arr,j,l);
+        return j;
+    }
 
     public  static <E extends Comparable<E>> int partition(E[] arr, int l, int r) {
         // 选择第一个元素为基准点在测试用例为有序数组时会导致时间复杂度变成O(n²),
@@ -129,26 +197,38 @@ public class QuickSort {
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
 
-        Integer[] arrs = ArrayGenerator.generatorRandomArray(1000000 ,1000000 );
-        Integer[] test = ArrayGenerator.generatorArrayPartition(100000);
+        Integer[] arrs = ArrayGenerator.generatorRandomArray(100000 ,100000 );
+
+        Integer[] arrs2 = Arrays.copyOf(arrs, arrs.length);
+
+        Integer[] test = ArrayGenerator.generatorArraySame(1000000);
         Integer[] test2 = Arrays.copyOf(test, test.length);
 
-//        Integer[] arrs2 = Arrays.copyOf(arrs, arrs.length);
+//
 //        Integer[] arrs3 = Arrays.copyOf(arrs, arrs.length);
 //        Integer[] arrs4 = Arrays.copyOf(arrs, arrs.length);
 //        Integer[] arrs5 = Arrays.copyOf(arrs, arrs.length);
 //        Integer[] arrs6 = Arrays.copyOf(arrs, arrs.length);
 //        Integer[] arrs7 = Arrays.copyOf(arrs, arrs.length);
-//        SortingHelper.sortTest(QuickSort.class,"sort",arrs);
-//        SortingHelper.sortTest(QuickSort.class,"sort2",arrs2);
-//        SortingHelper.sortTest(QuickSort.class,"sort3",arrs3);
-//        SortingHelper.sortTest(QuickSort.class,"sort4",arrs4);
-//        SortingHelper.sortTest(MergeSort.class,"sort4",arrs5);
-//        SortingHelper.sortTest(MergeSort.class,"sort5",arrs6);
-//        SortingHelper.sortTest(MergeSort.class,"sort2",arrs7);
+//        SortingHelper.sortTest(QuickSort.class,"sort",arrs);  //双路 100000 data  use 0.040727 s
+//        SortingHelper.sortTest(QuickSort.class,"sort2",arrs2); // 单路分情况使用插入排序 sort 100000 data  use 0.042009 s
+//        SortingHelper.sortTest(QuickSort.class,"sort3",arrs3); // 单路小于16时插入 sort 100000 data  use 0.038713 s
+//        SortingHelper.sortTest(QuickSort.class,"sort4",arrs4); //单路小于8时插入 sort 100000 data  use 0.020036 s
+//        SortingHelper.sortTest(QuickSort.class,"sortSingle",arrs5); // 原始单路sortSingle sort 100000 data  use 0.021504 s
+//        SortingHelper.sortTest(MergeSort.class,"sort5",arrs6); // sort 100000 data  use 0.050350 s
+//        SortingHelper.sortTest(MergeSort.class,"sort2",arrs7); // sort 100000 data  use 0.107033 s
 
-        Integer[] integers = ArrayGenerator.generatorOrderArray(100000);
-        SortingHelper.sortTest(QuickSort.class,"sort",test);
-        SortingHelper.sortTest(MergeSort.class,"sort",test2);
+        Integer[] orders = ArrayGenerator.generatorOrderArray(10000);
+        Integer[] orders2 =  Arrays.copyOf(orders, orders.length);
+
+        SortingHelper.sortTest(QuickSort.class,"sort",arrs);
+        SortingHelper.sortTest(QuickSort.class,"sortSingle",arrs2);
+
+
+        SortingHelper.sortTest(QuickSort.class,"sort",test2);
+        SortingHelper.sortTest(QuickSort.class,"sortSingle",test);
+
+        SortingHelper.sortTest(QuickSort.class,"sort",orders);
+        SortingHelper.sortTest(QuickSort.class,"sortSingle",orders2);
     }
 }
