@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Random;
@@ -33,6 +35,9 @@ public class QuickSort {
     // 单路快排
     public static  <E extends Comparable<E>> void  sortSingle(E[] arr){
         quickSort5(arr,0,arr.length-1);
+    }
+    public static  <E extends Comparable<E>> void  sort3Ways(E[] arr){
+        quickSort3Ways(arr,0,arr.length-1);
     }
 
     private static <E extends Comparable<E>>  void quickSort(E[] arr, int l, int r) {
@@ -87,6 +92,54 @@ public class QuickSort {
         int p = partition(arr,l,r);
         quickSort5(arr,l,p-1);
         quickSort5(arr,p+1,r);
+    }
+
+    // 三路快排
+    public static <E extends Comparable<E>>  void quickSort3Ways(E[] arr, int l, int r) {
+        if(l>=r){
+            return;
+        }
+         Pair<Integer,Integer> keyIsLeftValueIsRight = partition3Ways(arr,l,r);
+        quickSort3Ways(arr,l,keyIsLeftValueIsRight.getKey());
+        quickSort3Ways(arr,keyIsLeftValueIsRight.getValue(),r);
+    }
+
+    private static <E extends Comparable<E>> Pair<Integer, Integer> partition3Ways(E[] arr, int l, int r) {
+
+        int p = l+random.nextInt(r-l+1);
+        E part = arr[p];
+        swap(arr,p,l);
+        // 三路快的思路就是将数组分成  [l+1,lt]<part,[lt+1,i-1]=part,[gt,r]>part
+        // 由此可见,我们需要初始的值为 lt = l,i=l+1,gt=r+1;
+
+        int lt =l,i=l+1,gt = r+1;
+
+        // 循环终止条件就是i越界gt了,即i>=gt
+        while(i<gt){
+            // 三种情况互斥 a:arr[i]<part,b:arr[i]>part,c:arr[i]=part;
+            //a
+            if(arr[i].compareTo(part)<0){
+                //如果当前元素小于标定点,说明当前元素应该滚到[l+1,lt]去,所以lt扩容,完成遍历下一个元素
+                lt++;
+                swap(arr,lt,i);
+                i++;
+            // b
+            }else if(arr[i].compareTo(part)>0){
+                //如果当前元素大于标定点,说明当前元素应该滚到[gt,r]去,所以gt--以便扩容,完成之后i不变,因为换来的是一个没有遍历过的元素
+                gt--;
+                swap(arr,gt,i);
+            // c
+            }else{
+                //除此之外当前元素与标定点相等,那么当前元素应该滚到[lt+1,i-1],只需要i++;就好
+                i++;
+            }
+
+        }
+        //当循环完成之后,我们要把小于part区间里最后一个值和标定点做交换
+        swap(arr,l,lt);
+        // 交换完成之后,我们的三区间就变成了
+        // [l,lt-1],[lt,gt-1],[gt,r]
+        return new Pair<>(lt-1,gt);
     }
 
 
@@ -198,11 +251,16 @@ public class QuickSort {
 
 
         Integer[] arrs = ArrayGenerator.generatorRandomArray(100000 ,100000 );
-
         Integer[] arrs2 = Arrays.copyOf(arrs, arrs.length);
+        Integer[] arrs3 = Arrays.copyOf(arrs, arrs.length);
 
         Integer[] test = ArrayGenerator.generatorArraySame(1000000);
         Integer[] test2 = Arrays.copyOf(test, test.length);
+        Integer[] test3 = Arrays.copyOf(test, test.length);
+
+        Integer[] orders = ArrayGenerator.generatorOrderArray(10000);
+        Integer[] orders2 =  Arrays.copyOf(orders, orders.length);
+        Integer[] orders3 =  Arrays.copyOf(orders, orders.length);
 
 //
 //        Integer[] arrs3 = Arrays.copyOf(arrs, arrs.length);
@@ -218,17 +276,21 @@ public class QuickSort {
 //        SortingHelper.sortTest(MergeSort.class,"sort5",arrs6); // sort 100000 data  use 0.050350 s
 //        SortingHelper.sortTest(MergeSort.class,"sort2",arrs7); // sort 100000 data  use 0.107033 s
 
-        Integer[] orders = ArrayGenerator.generatorOrderArray(10000);
-        Integer[] orders2 =  Arrays.copyOf(orders, orders.length);
+
 
         SortingHelper.sortTest(QuickSort.class,"sort",arrs);
         SortingHelper.sortTest(QuickSort.class,"sortSingle",arrs2);
-
+        SortingHelper.sortTest(QuickSort.class,"sort3Ways",arrs3);
 
         SortingHelper.sortTest(QuickSort.class,"sort",test2);
-        SortingHelper.sortTest(QuickSort.class,"sortSingle",test);
+//        SortingHelper.sortTest(QuickSort.class,"sortSingle",test);
+        SortingHelper.sortTest(QuickSort.class,"sort3Ways",test3);
 
         SortingHelper.sortTest(QuickSort.class,"sort",orders);
         SortingHelper.sortTest(QuickSort.class,"sortSingle",orders2);
+        SortingHelper.sortTest(QuickSort.class,"sort3Ways",orders3);
+
+
+
     }
 }
