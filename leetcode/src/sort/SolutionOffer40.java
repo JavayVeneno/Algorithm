@@ -13,7 +13,7 @@ class SolutionOffer40 {
             return null;
         }
 
-        int p  = selectK(arr,k-1,0,arr.length-1);
+        int p  = selectKNotR(arr,k-1,0,arr.length-1);
 
         return Arrays.copyOf(arr,k);
     }
@@ -29,6 +29,23 @@ class SolutionOffer40 {
            return  selectK(arr,index,p+1,r);
         }
     }
+
+    private int selectKNotR(int[] arr,int index,int l ,int r){
+        int p  = partition(arr,l,r);
+        while (l<=r){
+            if(p==index){
+                return p ;
+
+            }else if(p>index){
+                r = p-1;
+            }else{
+                l = p+1;
+            }
+            p = partition(arr,l,r);
+        }
+        return p ;
+    }
+
 
     private int partition(int[] arr, int l, int r) {
         int v = l+random.nextInt(r-l+1);
@@ -66,7 +83,7 @@ class SolutionOffer40 {
 
     public static void main(String[] args) {
         int[] test = {4,5,1,6,2,7,3,8};
-        int[] leastNumbers = new SolutionOffer40().smallestK(test, 8);
+        int[] leastNumbers = new SolutionOffer40().smallestK(test, 2);
         Arrays.stream(leastNumbers).forEach(System.out::println);
     }
 
