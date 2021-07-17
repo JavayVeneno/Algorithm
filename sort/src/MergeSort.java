@@ -240,12 +240,14 @@ public class MergeSort {
            Integer[] x1= Arrays.copyOf(x,x.length);
            Integer[] x2 = Arrays.copyOf(x1,x1.length);
            Integer[] x3 = Arrays.copyOf(x2,x2.length);
+           Integer[] x4 = Arrays.copyOf(x2,x2.length);
 
 //           Integer[] arr = {1,3,5,2,4,6};
             SortingHelper.sortTest("MergeSort",arr);
             SortingHelper.sortTest(MergeSort.class,"sort2",x2);
             SortingHelper.sortTest(MergeSort.class,"sort3",x1);
             SortingHelper.sortTest(MergeSort.class,"sort4",x3);
+            SortingHelper.sortTest(MergeSort.class,"sort7",x4);
 //            SortingHelper.sortTest("SelectionSort",x2);
 
 
@@ -317,6 +319,51 @@ public class MergeSort {
 
     }
 
+    // 使用左闭右开的参数来merger and sort
+    public static <E extends Comparable<E>> void sort7(E[] arr){
+
+        E[] temp = Arrays.copyOf(arr,arr.length);
+
+        sort7(arr,0,arr.length,temp);
+    }
+
+    private static <E extends Comparable<E>> void sort7(E[] arr, int l, int r, E[] temp) {
+        if(r-l==1){
+            return ;
+        }
+        int middle = l+(r-l)/2;
+        sort7(arr,l,middle,temp);
+        sort7(arr,middle,r,temp);
+        if(arr[middle-1].compareTo(arr[middle])>0){
+            merger7(arr,l,middle,r,temp);
+        }
+
+
+    }
+
+    private static <E extends Comparable<E>> void merger7(E[] arr, int l, int m, int r, E[] temp) {
+        System.arraycopy(arr,l,temp,l,r-l);
+        //[l,m),[m,r);
+        int left = l,right = m;
+        for (int i = l ; i <r ; i++) {
+            if(left>=m){
+                //左边越界
+                arr[i] = temp[right];
+                right++;
+            }else if(right>=r){
+                // 右边越界
+                arr[i] = temp[left];
+                left++;
+            }else if(temp[left].compareTo(temp[right])<=0){
+                arr[i] = temp[left];
+                left++;
+            }else{
+                arr[i] = temp[right];
+                right++;
+            }
+        }
+
+    }
 
 
 }
