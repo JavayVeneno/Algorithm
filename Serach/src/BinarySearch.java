@@ -66,15 +66,78 @@ public class BinarySearch {
         return r;
     }
 
+    // 二分搜索的变种:ceil ,查找某个值的最大索引,如果不存在则取大于该值的最小值索引
+    // 类似 ceil(5.0) = 5 ceil(5.5) = 6;
+
+    public static <E extends Comparable<E>> int binarySearchCeil(E[] arr,E target){
+        int index = binarySearchUpper(arr,target);
+        if(index>0 && arr[index-1].compareTo(target)==0){
+            return index-1;
+        }
+        return index==arr.length?-1:index;
+    }
+
+    // 二分搜索的变种:lowerCeil,查找某个值的最小索引,如果不存在则取大于该值的最小索引
+    public static <E extends Comparable<E>> int binarySearchLowerCeil(E[] arr,E target){
+        int index = binarySearchLowerCeil(arr,0,arr.length,target);
+        return index==arr.length?-1:index;
+    }
+
+    private static <E extends Comparable<E>> int binarySearchLowerCeil(E[] arr, int l, int r, E target) {
+
+        // [l,p]<target  [p+1,r]>=target;
+        while(l<r){
+            int p =l+(r-l)/2;
+            if(arr[p].compareTo(target)>=0){
+                r = p;
+            }else {
+                l = p+1;
+            }
+        }
+        return l;
+    }
+
+    // 二分搜索的变种:lower,查到小于某个值的的最大值
+    // 因为target的值非常大的话,我们至少有一个r是满足的,反之target非常小,我们可能没有哟个值满足,所以l取到-1[l-1,r]
+
+    public static <E extends Comparable<E>> int binarySearchLower(E[] arr,E target){
+
+        int index = binarySearchLower(arr,-1,arr.length-1,target);
+        return index ;
+    }
+
+    private static <E extends Comparable<E>> int binarySearchLower(E[] arr, int l, int r, E target) {
+
+
+        // 循环的条件就是l < r;
+        while (l<r){
+            int p = l+(r-l+1)/2;
+            if(arr[p].compareTo(target)<0){
+                l = p;
+            }else{
+                // arr[p]大于等target,可以放心的丢掉 即r = p -1;
+                r = p-1;
+            }
+        }
+        return l;
+    }
+
 
     public static void main(String[] args) {
-        Integer[] test = {-1,0,0,3,3,5,9,12};
+        Integer[] test = {-1};
         int search = search2(test,0);
 
-
         System.out.println(search);
-        int i = binarySearchUpper(test, 2);
-        System.out.println(test[i]);
+        int i = binarySearchUpper(test, 12);
+        int j = binarySearchCeil(test, 3);
+        System.out.println(i);
+        System.out.println(j);
+        int index = binarySearchLowerCeil(test, 3);
+        System.out.println(index);
+
+        int lower = binarySearchLower(test, -1);
+        System.out.println(lower);
+
 
     }
 }
