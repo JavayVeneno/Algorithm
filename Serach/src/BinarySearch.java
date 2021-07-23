@@ -122,9 +122,78 @@ public class BinarySearch {
         return l;
     }
 
+    // 二分搜索法的变种:LowerFloor,查找某个值的最小索引,没有则返回小于该值的最大值最大索引
+
+    public static <E extends Comparable<E>> int binarySearchLowerFloor(E[] arr,E target){
+        // 其实我们可以调用lowerCeil 返回索引比对,如果相同直接返回索引,如果不同返回该索引-1;
+        int index = binarySearchLowerCeil(arr, target);
+        if(index != -1 && arr[index].equals(target)){
+            return index;
+        }else{
+            return index ==-1?arr.length-1:index-1;
+        }
+    }
+
+    // 二分搜索法的变种:UpperFloor,查找某个值的最大索引,没有则返回小于该值的最大索引
+
+    public static <E extends Comparable<E>> int binarySearchUpperFloor(E[] arr,E target){
+        // 仍然可以利用现有的函数binarySearchCeil返回索引对比,如果相同直接返回索引,不同则该索引-1;
+
+        int index = binarySearchCeil(arr,target);
+        if(index != -1 && arr[index].equals(target)){
+            return index;
+        }else{
+            return index == -1?arr.length-1:index-1;
+        }
+    }
+
+    // 尝试使用不调用其他方法来实现binarySearchUpperFloor
+    // 查找某个值的最大索引,没有则返回小于该值的最大索引
+    public static <E extends Comparable<E>> int binarySearchUpperFloor2(E[] arr,E target){
+
+        // 存在无穷小的数据,我没法返回小于其的最小值,所以需要预留-1的空间
+        int l = 0-1,r=arr.length-1;
+        while (l<r){
+            int middle = l+(r-l+1)/2;
+            // 如果有相等的情况那么说明,等于值可能是其中一个解
+            if(arr[middle].compareTo(target)<=0){
+                l = middle;
+            }else{
+                r  =middle-1;
+            }
+        }
+        return l;
+    }
+
+
+    // 使用>=target的方式实现二分查找法
+
+    public static <E extends Comparable<E>> int binarySearchByLowerCeil(E[] arr,E target){
+        // lowerceil的定义是查找某个值的最小索引,不存在返回大于该值的最小值的最小索引
+        // 先考虑边界问题,0,length(因为不存在时要大于其的最小值,所以需要预留空间,所以r取length)
+        int l = 0,r = arr.length;
+        while (l<r){
+            // 根据l或者r变动来确定是否取上
+
+            int middle = l+(r-l)/2;
+            if(arr[middle].compareTo(target)<0){
+                l = middle+1;
+            }else{
+                r = middle;
+            }
+        }
+        // 此时的l可能越界,使用时需要判断
+        if (l < arr.length && arr[l].equals(target)) {
+            return l;
+        } else {
+            return -1;
+        }
+
+    }
 
     public static void main(String[] args) {
-        Integer[] test = {-1};
+        //                0 1 2 3 4 5 6 7 8
+        Integer[] test = {0,1,1,3,3,5,5,7,7};
         int search = search2(test,0);
 
         System.out.println(search);
@@ -132,12 +201,24 @@ public class BinarySearch {
         int j = binarySearchCeil(test, 3);
         System.out.println(i);
         System.out.println(j);
-        int index = binarySearchLowerCeil(test, 3);
+        int index = binarySearchLowerCeil(test, 4);
         System.out.println(index);
 
         int lower = binarySearchLower(test, -1);
         System.out.println(lower);
 
+        int lowerFloor = binarySearchLowerFloor(test,7);
+        System.out.println(lowerFloor);
+
+        int upperFloor = binarySearchUpperFloor(test,7);
+        System.out.println(upperFloor);
+
+
+        int upperFloor2 = binarySearchUpperFloor2(test,7);
+        System.out.println(upperFloor2);
+
+        int indexx = binarySearchByLowerCeil(test,8);
+        System.out.println(indexx);
 
     }
 }
