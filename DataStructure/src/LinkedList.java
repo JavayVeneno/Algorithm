@@ -40,6 +40,20 @@ public class LinkedList<E> {
         size = 0;
     }
 
+    // 递归的ａｄｄ一个元素
+    public void addR(E e){
+        dummyHead.next = addR(dummyHead.next,e);
+    }
+
+    private Node addR(Node next, E e) {
+        if(next == null){
+            return new Node(e);
+        }
+        next.next=addR(next.next,e);
+        return next;
+
+    }
+
     // 时间复杂度分析,O(1)
     public void addFirst(E e){
        // 在头部添加一个元素时,这个元素的next就应该指向原头部,自己再成为新头部
@@ -187,6 +201,9 @@ public class LinkedList<E> {
         linkedList.removeFirst();
         System.out.println(linkedList);
         linkedList.removeLast();
+        System.out.println(linkedList);
+
+        linkedList.addR(9);
         System.out.println(linkedList);
     }
 }
