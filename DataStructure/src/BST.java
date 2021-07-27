@@ -147,16 +147,88 @@ public class BST<E extends Comparable<E>> {
     }
 
 
+    public void preOrder(){
+        preOrder(root);
+    }
+
+    private void preOrder(Node root) {
+        if(root == null){
+            return ;
+        }
+        System.out.println(root.e);
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+
+    public void inOrder(){
+        inOrder(root);
+    }
+    private void inOrder(Node root){
+        if(root == null){
+            return;
+        }
+        inOrder(root.left);
+        System.out.println(root.e);
+        inOrder(root.right);
+    }
+    public void postOrder(){
+        postOrder(root);
+    }
+    private void postOrder(Node root){
+        if(root != null){
+            postOrder(root.left);
+            postOrder(root.right);
+            System.out.println(root.e);
+        }
+    }
+
+    @Override
+    public String toString(){
+
+        StringBuilder sb  = new StringBuilder();
+        generateBSTString(root,0,sb);
+        return sb.toString();
+    }
+
+    private void generateBSTString(Node root, int depth, StringBuilder sb) {
+        if(root == null){
+            sb.append(generateDepthString(depth)+"null \n");
+            return ;
+        }
+        sb.append(generateDepthString(depth)+root.e+"\n");
+        generateBSTString(root.left,depth+1,sb);
+        generateBSTString(root.right,depth+1,sb);
+    }
+
+    private String generateDepthString(int depth) {
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < depth ; i++) {
+            res.append("--");
+        }
+        return res.toString();
+    }
+
     public static void main(String[] args) {
         BST bst = new BST();
-        Integer[] test = ArrayGenerator.generatorRandomArray(10,10);
+        Integer[] test ={5,3,6,8,4,2};
         for (Integer integer : test) {
-            bst.addElement(integer);
+            bst.add(integer);
         }
-        System.out.println(bst);
-        System.out.println(bst.contains(3));
-        System.out.println(bst.contains(4));
+
+
+//        System.out.println(bst.contains(3));
+//        System.out.println(bst.contains(4));
+//        bst.preOrder();
+//        System.out.println();
+//        System.out.println(bst);
+        bst.preOrder();
+        System.out.println();
+        bst.inOrder();
+        System.out.println();
+        bst.postOrder();
+
     }
+
 
 
 }
