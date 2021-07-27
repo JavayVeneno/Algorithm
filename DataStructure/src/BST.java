@@ -90,20 +90,73 @@ public class BST<E extends Comparable<E>> {
             //同理
             root.right = add(root.right,e);
         }
-        // 相等的情况只需要 返回root即可。
+
         return root;
 
     }
+
+    //使用非递归来实现添加元素
+    public void addElement(E e){
+
+        if(root ==null){
+            size++;
+            root = new Node(e);
+            return;
+        }
+        Node cur = root;
+        while(cur != null){
+            if(e.compareTo(cur.e)>0){
+                if(cur.right == null){
+                    cur.right = new Node(e);
+                    size++;
+                    return ;
+                }else{
+                    cur = cur.right;
+                }
+            }else if(e.compareTo(cur.e)<0){
+                if(cur.left == null){
+                    cur.left = new Node(e);
+                    size++;
+                    return ;
+                }else{
+                    cur = cur.left;
+                }
+            }else{
+                return;
+            }
+        }
+
+    }
+
+    public boolean contains(E e){
+        return contains(root,e);
+    }
+
+    private boolean contains(Node root, E e) {
+
+        if(root == null){
+            return false;
+        }
+        if(e.compareTo(root.e)==0){
+            return true;
+        }else if(e.compareTo(root.e)<0){
+            return contains(root.left,e);
+        }else{
+            return contains(root.right,e);
+        }
+    }
+
 
     public static void main(String[] args) {
         BST bst = new BST();
         Integer[] test = ArrayGenerator.generatorRandomArray(10,10);
         for (Integer integer : test) {
-            bst.add(integer);
+            bst.addElement(integer);
         }
         System.out.println(bst);
+        System.out.println(bst.contains(3));
+        System.out.println(bst.contains(4));
     }
-
 
 
 }
