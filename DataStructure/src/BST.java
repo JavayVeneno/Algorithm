@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -218,6 +219,79 @@ public class BST<E extends Comparable<E>> {
             }
         }
     }
+    // 查找最小元素,对于二分搜索树来说,最左端即最小,所以没有左子说明到底
+    public E minimum(){
+        if(isEmpty()){
+            throw new IllegalArgumentException("BST is Empty!");
+        }
+        return minimum(root).e;
+    }
+
+    private Node minimum(Node node) {
+
+        if(node.left == null){
+            return node;
+        }
+        return minimum(node.left);
+
+    }
+
+    //查找最大元素 对于二分搜索树来说,最右端即最大,所以没有右子说明到底
+    public E maximum(){
+        if(isEmpty()){
+            throw new IllegalArgumentException("BST is Empty!");
+        }
+        return maximum(root).e;
+    }
+
+    private Node maximum(Node root) {
+        if(root.right==null){
+            return root;
+        }
+        return maximum(root.right);
+
+    }
+
+    // 移除最小元素,那么移除之后需要返回移除之后的右子节点/null,以便串联
+    public E removeMin(){
+        E res = minimum();
+        root = removeMin(root);
+        return res;
+    }
+
+    private Node removeMin(Node node) {
+
+        // 写递归的第一件事就是先想好递归到底的情况
+        // 移除最小,递归到底就是node.left是空
+        if(node.left == null){
+            //取出右子,因为右子将取代当前node
+            Node right = node.right;
+            node = null;
+            size--;
+            return right;
+        }
+        // 如果没有到底那么就递归调用node.left
+        node.left = removeMin(node.left);
+        return node;
+    }
+
+    public E removeMax(){
+        E res = maximum();
+        root = removeMax(root);
+        return res;
+    }
+
+    private Node removeMax(Node node) {
+
+        if(node.right==null){
+            Node left = node.left;
+            node = null;
+            size--;
+            return left;
+        }
+        node.right = removeMax(node.right);
+        return node;
+    }
 
     @Override
     public String toString(){
@@ -246,13 +320,25 @@ public class BST<E extends Comparable<E>> {
     }
 
     public static void main(String[] args) {
-        BST bst = new BST();
-        Integer[] test ={5,3,6,8,4,2};
+        BST<Integer> bst = new BST<>();
+//        Integer[] test ={5,3,6,8,4,2};
+        //
+        Integer[] test = ArrayGenerator.generatorRandomArray(1000,1000);
         for (Integer integer : test) {
             bst.add(integer);
         }
+        ArrayList<Integer> list  = new ArrayList<>(1000);
+        for (int i = 0; i < bst.size; i++) {
 
+           list.add(bst.removeMax());
+        }
 
+        for (int i = 1; i <list.size() ; i++) {
+            if(list.get(i-1)<list.get(i)){
+                throw new IllegalArgumentException("remove err");
+            }
+        }
+        System.out.println("remove completed");
 //        System.out.println(bst.contains(3));
 //        System.out.println(bst.contains(4));
 //        bst.preOrder();
@@ -264,7 +350,7 @@ public class BST<E extends Comparable<E>> {
 //        System.out.println();
 //        bst.postOrder();
 
-        bst.levelOrder();
+//        bst.levelOrder();
 
     }
 
