@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 /**
  * @author Veneno
@@ -146,6 +149,23 @@ public class BST<E extends Comparable<E>> {
         }
     }
 
+    //非递归的方式实现前序遍历
+    public void preOrderNR(){
+        //我们可以模拟系统栈
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            Node cur = stack.pop();
+            System.out.println(cur.e);
+            //记住栈是先入后出,优先访问的应放在后面push
+            if(cur.right != null){
+                stack.push(cur.right);
+            }
+            if(cur.left != null){
+                stack.push(cur.left);
+            }
+        }
+    }
 
     public void preOrder(){
         preOrder(root);
@@ -179,6 +199,23 @@ public class BST<E extends Comparable<E>> {
             postOrder(root.left);
             postOrder(root.right);
             System.out.println(root.e);
+        }
+    }
+
+    public void levelOrder(){
+
+        // 层序遍历,我们可以使用队列来实现
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            Node cur = queue.remove();
+            System.out.println(cur.e);
+            if(cur.left != null){
+                queue.add(cur.left);
+            }
+            if(cur.right != null){
+                queue.add(cur.right);
+            }
         }
     }
 
@@ -221,11 +258,13 @@ public class BST<E extends Comparable<E>> {
 //        bst.preOrder();
 //        System.out.println();
 //        System.out.println(bst);
-        bst.preOrder();
-        System.out.println();
-        bst.inOrder();
-        System.out.println();
-        bst.postOrder();
+//        bst.preOrder();
+//        System.out.println();
+//        bst.preOrderNR();
+//        System.out.println();
+//        bst.postOrder();
+
+        bst.levelOrder();
 
     }
 
