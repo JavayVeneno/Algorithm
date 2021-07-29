@@ -266,7 +266,7 @@ public class BST<E extends Comparable<E>> {
         if(node.left == null){
             //取出右子,因为右子将取代当前node
             Node right = node.right;
-            node = null;
+            node.right = null;
             size--;
             return right;
         }
@@ -285,12 +285,97 @@ public class BST<E extends Comparable<E>> {
 
         if(node.right==null){
             Node left = node.left;
-            node = null;
+            node.left = null;
             size--;
             return left;
         }
         node.right = removeMax(node.right);
         return node;
+    }
+
+    public void remove(E e){
+        root = removeByLtSuccessor(root,e);
+    }
+
+    private Node removeByGtSuccessor(Node node, E e) {
+        // 首先确立递归终止条件,即node为空时
+        if(node == null){
+            // 没有找到该元素
+            return null;
+        }
+        // 除此之外,分三种情况
+        if(e.compareTo(node.e)<0){
+            // 待删除元素小于当前节点,往当前的左子去删除
+            node.left = removeByGtSuccessor(node.left,e);
+            return node;
+        }
+        else if(e.compareTo(node.e)>0){
+            // 待删除元素大于当前节点,往当前的右子去删除
+            node.right = removeByGtSuccessor(node.right,e);
+            return node;
+        }
+        else{
+            // 待删除元素等于当前节点,删除当前节点,分三种情况
+            if(node.left == null){
+                //当前元素没有左子,将右子选作继承人
+                Node right = node.right;
+                node.right = null;
+                size--;
+                return right;
+            }
+            if(node.right == null){
+                //当前元素没有右子,将左子选作继承人
+                Node left = node.left;
+                node.left = null;
+                size--;
+                return left;
+            }
+            // 左右子均存在
+            //选中大于当前值的最小值来继承;
+            // 找到右子最小节点,删除右子最小节点返回最新的右子并连接到successor
+            //连接左子于successor
+            // 删除右子的最小节点,size--,其实白减了
+            // 因为我们将successor指向了它,所以理论需要补充一个size++的逻辑,后面置空了node节点,所以需要补size--;
+            // 一加一减抵消了,所以不需要再--了
+            Node successor = minimum(node.right);
+            successor.right = removeMin(node.right);
+            successor.left = node.left;
+            node.left = node.right = null;
+            return successor;
+        }
+    }
+    private Node removeByLtSuccessor(Node node, E e) {
+        // 首先确定递归终止条件
+        if(node ==null){
+            return null;
+        }
+        if(e.compareTo(node.e)<0){
+            node.left = removeByLtSuccessor(node.left,e);
+            return node;
+        }
+       else if(e.compareTo(node.e)>0){
+            node.right = removeByLtSuccessor(node.right,e);
+            return node;
+        }
+        else{
+            if(node.left == null){
+                Node right = node.right;
+                node.right = null;
+                size--;
+                return right;
+            }
+            if(node.right == null){
+                Node left = node.left;
+                node.left = null;
+                size--;
+                return left;
+            }
+            Node successor = maximum(node.left);
+            successor.left = removeMax(node.left);
+            successor.right =  node.right;
+            node.right = node.left = null;
+            return successor;
+        }
     }
 
     @Override
@@ -327,12 +412,15 @@ public class BST<E extends Comparable<E>> {
         for (Integer integer : test) {
             bst.add(integer);
         }
-        ArrayList<Integer> list  = new ArrayList<>(1000);
-        for (int i = 0; i < bst.size; i++) {
 
-           list.add(bst.removeMax());
+        ArrayList<Integer> list  = new ArrayList<>(1000);
+        while (bst.size!=0) {
+            Integer maximum = bst.maximum();
+            bst.remove(maximum);
+            list.add(maximum);
         }
 
+        System.out.println(bst);
         for (int i = 1; i <list.size() ; i++) {
             if(list.get(i-1)<list.get(i)){
                 throw new IllegalArgumentException("remove err");
