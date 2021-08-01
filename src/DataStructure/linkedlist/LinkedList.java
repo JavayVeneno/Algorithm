@@ -173,6 +173,46 @@ public class LinkedList<E> {
         return remove(size-1);
     }
 
+
+    public void removeElement(E e) {
+        dummyHead.next = removeElementR(dummyHead.next,e);
+//         removeElementNR(e);
+    }
+
+    private void removeElementNR( E e) {
+
+        Node cur = dummyHead;
+        while(cur.next!=null){
+            if(cur.next.e.equals(e)){
+               break;
+            }else{
+                cur = cur.next;
+            }
+        }
+        if(cur.next!=null){
+            Node next = cur.next;
+            cur.next = next.next;
+            next.next = null;
+
+        }
+    }
+
+    //递归删除元素
+    private Node removeElementR(Node node, E e) {
+        if(node == null){
+            return null;
+        }
+        if(e.equals(node.e)){
+            Node next = node.next;
+            node.next = null;
+            return next;
+        }else{
+            node.next = removeElementR(node.next,e);
+            return node;
+        }
+    }
+
+
     @Override
     public String toString() {
 
@@ -206,6 +246,8 @@ public class LinkedList<E> {
         System.out.println(linkedList);
 
         linkedList.addR(9);
+        System.out.println(linkedList);
+        linkedList.removeElement(1);
         System.out.println(linkedList);
     }
 }
