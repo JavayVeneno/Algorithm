@@ -153,6 +153,15 @@ public class Array<E> {
 
     }
 
+    public void swap(int i, int j) {
+        if(i<0 || i>=size || j<0 || j>=size){
+            throw new IllegalArgumentException("index out of bound !");
+        }
+        E temp = data[j];
+        data[j] = data[i] ;
+        data[i] = temp;
+    }
+
     @Override
     public String toString() {
 
