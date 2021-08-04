@@ -1,6 +1,8 @@
 package DataStructure.heap;
 
 import DataStructure.array.Array;
+import common.ArrayGenerator;
+import sort.HeapSort;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -14,6 +16,15 @@ public class MaxHeap<E extends Comparable<E>> {
     }
     public MaxHeap(int capacity){
         data = new Array<>(capacity);
+    }
+    // heapify的方式来创建堆,对比(add()*n = O(logn)*n )可以优化到O(n)的时间复杂度
+
+    public MaxHeap(E[] arr){
+        data = new Array<E>(arr);
+        int lastParent = parent(arr.length-1);
+        for (int i = lastParent; i >=0 ; i--) {
+            siftDown(i);
+        }
     }
 
     public int size(){
@@ -102,32 +113,85 @@ public class MaxHeap<E extends Comparable<E>> {
         }
         return data.get(0);
     }
+    // 将最大元素替换成输入元素，并且维持堆的特性。
+    public E replace(E e){
+        E res = findMax();
+        data.set(0,e);
+        siftDown(0);
+        return res;
+    }
 
-    public static void main(String[] args) {
+    public static <E extends Comparable<E>> void testHeap(E[] data,boolean isHeapify) {
 
-        int n = 100000;
-        Random random = new Random();
-        MaxHeap<Integer> heap  = new MaxHeap<>();
         long time1 = System.nanoTime();
-        for (int i = 0 ;i< n;i++) {
-            heap.add(random.nextInt(Integer.MAX_VALUE));
+
+        MaxHeap<E> heap ;
+        if(isHeapify){
+            heap = new MaxHeap<>(data);
+        }else{
+            heap = new MaxHeap<>();
+            Arrays.stream(data).forEach(heap::add);
         }
+
         long time2 = System.nanoTime();
         double use  = (time2 - time1) / 1_000_000_000.000000000;
-        System.out.printf("%d条数据,run  %d次 add 耗时 %fs %n",n,n,use);
-        int[] ints = new int[n];
+        System.out.printf("%d条数据, 构建heap 耗时 %fs %n",data.length,use);
+
+
         long time3 = System.nanoTime();
-        for (int i = 0; i < n; i++) {
+        // 验证正确性
+        E[] ints = (E[]) new Comparable[data.length];
+        for (int i = 0; i < data.length; i++) {
             ints[i] = heap.extractMax();
         }
         long time4 = System.nanoTime();
         double use2  = (time4 - time3) / 1_000_000_000.000000000;
-        System.out.printf("%d条数据,run   %d次 extractMax 耗时 %fs %n",n,n,use2);
-        for (int i = 1; i <ints.length ; i++) {
-            if(ints[i-1]<ints[i]){
+        System.out.printf("%d条数据,run   %d次 extractMax 耗时 %fs %n",data.length,data.length,use2);
+        for (int i = 1; i <data.length ; i++) {
+            if(ints[i-1].compareTo(ints[i])<0){
                 throw new IllegalArgumentException("error");
             }
         }
+
+
+    }
+
+
+    public static void main(String[] args) {
+
+        int n = 1_000_000;
+//        Random random = new Random();
+//        MaxHeap<Integer> heap  = new MaxHeap<>();
+//        long time1 = System.nanoTime();
+//        for (int i = 0 ;i< n;i++) {
+//            heap.add(random.nextInt(Integer.MAX_VALUE));
+//        }
+//        long time2 = System.nanoTime();
+//        double use  = (time2 - time1) / 1_000_000_000.000000000;
+//        System.out.printf("%d条数据,run  %d次 add 耗时 %fs %n",n,n,use);
+//        int[] ints = new int[n];
+//        long time3 = System.nanoTime();
+//        for (int i = 0; i < n; i++) {
+//            ints[i] = heap.extractMax();
+//        }
+//        long time4 = System.nanoTime();
+//        double use2  = (time4 - time3) / 1_000_000_000.000000000;
+//        System.out.printf("%d条数据,run   %d次 extractMax 耗时 %fs %n",n,n,use2);
+//        for (int i = 1; i <ints.length ; i++) {
+//            if(ints[i-1]<ints[i]){
+//                throw new IllegalArgumentException("error");
+//            }
+//        }
+//1000000条数据, 构建heap 耗时 0.108041s
+//1000000条数据,run   1000000次 extractMax 耗时 0.808992s
+//1000000条数据, 构建heap 耗时 0.043333s
+//1000000条数据,run   1000000次 extractMax 耗时 0.791310s
+
+        Integer[] integers = ArrayGenerator.generatorRandomArray(n, Integer.MAX_VALUE);
+        Integer[] integers2 = Arrays.copyOf(integers,integers.length);
+        testHeap(integers,true);
+        System.out.println();
+//        testHeap(integers2,true);
         System.out.println("heap run  add and extractMax complete!");
     }
 }
