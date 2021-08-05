@@ -66,7 +66,7 @@ public class HeapSort<E extends Comparable<E>> {
             if(j+1<size && data[j+1].compareTo(data[j])>0){
                 j++;
             }
-            if(data[j].compareTo(data[k])<=0){
+            if(data[j].compareTo(data[k])<0){
                 break;
             }
             swap(data,j,k);
