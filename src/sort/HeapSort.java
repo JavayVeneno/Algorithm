@@ -24,6 +24,15 @@ public class HeapSort<E extends Comparable<E>> {
             data[i] = heap.extractMax();
         }
     }
+    // 较为直观的堆排序(heapify+取最大值,相比较sort2改成了构造方法取heapify)
+    public static <E extends Comparable<E>> void sort3(E[] data){
+        MaxHeap<E> heap = new MaxHeap<>(data);
+
+        for (int i = data.length-1; i >=0 ; i--) {
+            data[i] = heap.extractMax();
+        }
+    }
+
 
     // 优化后的堆排序(使用heapify的方式,然后依次取最大元素依次末端放置并siftdown被破坏之后的堆
     public static <E extends Comparable<E>> void sort(E[] data){
@@ -75,6 +84,7 @@ public class HeapSort<E extends Comparable<E>> {
         Integer[] arr3 = Arrays.copyOf(arr,arr.length);
         Integer[] arr4 = Arrays.copyOf(arr,arr.length);
         Integer[] arr5 = Arrays.copyOf(arr,arr.length);
+        Integer[] arr6 = Arrays.copyOf(arr,arr.length);
 
 
         SortingHelper.sortTest(QuickSort.class,"sort",arr);
@@ -82,6 +92,7 @@ public class HeapSort<E extends Comparable<E>> {
         SortingHelper.sortTest(MergeSort.class,"sort4",arr3);
         SortingHelper.sortTest(HeapSort.class,"sort",arr4);
         SortingHelper.sortTest(HeapSort.class,"sort2",arr5);
+        SortingHelper.sortTest(HeapSort.class,"sort3",arr6);
     }
 
 }
