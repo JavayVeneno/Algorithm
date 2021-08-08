@@ -106,7 +106,7 @@ public class MaxHeap<E extends Comparable<E>> {
         }
     }
 
-    private E findMax() {
+    public E findMax() {
 
         if(isEmpty()){
             throw new IllegalArgumentException("can't find max from empty heap!");

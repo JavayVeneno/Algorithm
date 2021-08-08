@@ -1,7 +1,6 @@
 package DataStructure.queue;
 
 import DataStructure.heap.MaxHeap;
-import sort.QuickSort;
 
 public class PriorityQueue<E extends Comparable<E>> implements Queue<E> {
 
