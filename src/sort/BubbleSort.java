@@ -63,6 +63,59 @@ public class BubbleSort{
         }
     }
 
+    //冒泡排序反向逻辑,小的往前放
+
+    public static <E extends Comparable<E>> void sort4(E[] arr){
+
+        for (int i = 0; i+1 < arr.length;i++) {
+            for(int j = arr.length-1;j>i ;j--){
+                if(arr[j-1].compareTo(arr[j])>0){
+                    swap(arr,j,j-1);
+                }
+            }
+
+
+        }
+    }
+
+    //基于4的优化
+
+    public static <E extends Comparable<E>> void sort5(E[] arr){
+
+        for (int i = 0; i+1 < arr.length;i++) {
+            boolean isSwaped = false;
+            for(int j = arr.length-1;j>i ;j--){
+                if(arr[j-1].compareTo(arr[j])>0){
+                    swap(arr,j,j-1);
+                    isSwaped = true;
+                }
+            }
+            if(!isSwaped){
+                break;
+            }
+
+
+        }
+    }
+    //基于5的优化
+
+    public static <E extends Comparable<E>> void sort6(E[] arr){
+
+        for (int i = 0; i+1 < arr.length;) {
+            int lastSwapIndex =arr.length-1;
+            for(int j = arr.length-1;j>i ;j--){
+                if(arr[j-1].compareTo(arr[j])>0){
+                    swap(arr,j,j-1);
+                    lastSwapIndex = j-1;
+                }
+            }
+            i = lastSwapIndex+1;
+
+
+        }
+    }
+
+
     private static <E extends Comparable<E>> void swap(E[] arr, int j, int i) {
 
         E temp = arr[i];
@@ -71,22 +124,31 @@ public class BubbleSort{
     }
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int n = 100_000;
+        int n = 10_000;
         System.out.println("random...");
         Integer[] test = ArrayGenerator.generatorRandomArray(n,n);
         Integer[] test2 = Arrays.copyOf(test,test.length);
         Integer[] test3 = Arrays.copyOf(test,test.length);
+        Integer[] test4 = Arrays.copyOf(test,test.length);
+        Integer[] test5 = Arrays.copyOf(test,test.length);
+        Integer[] test6 = Arrays.copyOf(test,test.length);
         SortingHelper.sortTest(BubbleSort.class,"sort",test);
         SortingHelper.sortTest(BubbleSort.class,"sort2",test2);
         SortingHelper.sortTest(BubbleSort.class,"sort3",test3);
+        SortingHelper.sortTest(BubbleSort.class,"sort4",test4);
+        SortingHelper.sortTest(BubbleSort.class,"sort5",test5);
+        SortingHelper.sortTest(BubbleSort.class,"sort6",test6);
         System.out.println("order...");
         test = ArrayGenerator.generatorOrderArray(n);
         test2 = Arrays.copyOf(test,test.length);
         test3 = Arrays.copyOf(test,test.length);
+        test4 = Arrays.copyOf(test,test.length);
+        test5 = Arrays.copyOf(test,test.length);
         SortingHelper.sortTest(BubbleSort.class,"sort",test);
         SortingHelper.sortTest(BubbleSort.class,"sort2",test2);
         SortingHelper.sortTest(BubbleSort.class,"sort3",test3);
-
-
+        SortingHelper.sortTest(BubbleSort.class,"sort4",test4);
+        SortingHelper.sortTest(BubbleSort.class,"sort5",test5);
+        SortingHelper.sortTest(BubbleSort.class,"sort6",test6);
     }
 }
