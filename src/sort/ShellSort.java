@@ -2,7 +2,7 @@ package sort;
 
 import common.ArrayGenerator;
 import common.SortingHelper;
-import sun.plugin.com.event.COMEventHandler;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -65,13 +65,15 @@ public class ShellSort {
     }
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int n = 1_00_000;
+        int n = 1_000_000;
         Integer[] test = ArrayGenerator.generatorRandomArray(n,n);
         Integer[] test2 = Arrays.copyOf(test,test.length);
         Integer[] test3 = Arrays.copyOf(test,test.length);
+        Integer[] test4 = Arrays.copyOf(test,test.length);
         SortingHelper.sortTest(ShellSort.class,"sort",test);
         SortingHelper.sortTest(ShellSort.class,"sort2",test2);
-        SortingHelper.sortTest(InsertionSort.class,"sort",test3);
+        SortingHelper.sortTest(QuickSort.class,"sort",test3);
+        SortingHelper.sortTest(MergeSort.class,"sort",test4);
 
     }
 }
