@@ -13,6 +13,29 @@ public class ShellSort {
 
     }
 
+    //基于sort2的基础上进行一次代码的优化,性能并没有得到优化
+
+    public static <E extends Comparable<E>> void sort(E[] arr){
+
+        int h = arr.length/2;
+        while(h>=1){
+
+            for (int start = h; start <arr.length ; start++) {
+
+                E temp = arr[start];
+                int j;
+                for (j = start; j-h >=0 && temp.compareTo(arr[j-h])<0 ; j-=h) {
+                    arr[j] = arr[j-h];
+                }
+                arr[j] =temp;
+            }
+            h/=2;
+        }
+    }
+
+
+    //第二次实现,性能并没有优化
+
     public static <E extends Comparable<E>> void sort2(E[] arr){
 
         int h = arr.length/2;
@@ -24,7 +47,7 @@ public class ShellSort {
 
                     E temp = arr[i];
                     int j;
-                    for ( j= i; j -h>=0 && temp.compareTo(arr[j-h])<0 ; j-=h) {
+                    for ( j= i; j-h>=0 && temp.compareTo(arr[j-h])<0 ; j-=h) {
 
                         arr[j] = arr[j-h];
                     }
@@ -37,7 +60,9 @@ public class ShellSort {
     }
 
 
-    public static <E extends Comparable<E>> void sort(E[] arr){
+    //第一次自我实现
+
+    public static <E extends Comparable<E>> void sort3(E[] arr){
 
         int n = arr.length;
 
@@ -65,7 +90,7 @@ public class ShellSort {
     }
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int n = 1_000_000;
+        int n = 1_00_000;
         Integer[] test = ArrayGenerator.generatorRandomArray(n,n);
         Integer[] test2 = Arrays.copyOf(test,test.length);
         Integer[] test3 = Arrays.copyOf(test,test.length);
