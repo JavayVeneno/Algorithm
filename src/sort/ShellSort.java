@@ -13,14 +13,40 @@ public class ShellSort {
 
     }
 
-    //基于sort2的基础上进行一次代码的优化,性能并没有得到优化
 
     public static <E extends Comparable<E>> void sort(E[] arr){
-
-        int h = arr.length/2;
+        int h = 1;
+        int length = arr.length;
+        while(h< length){
+            h= h*3+1;
+        }
         while(h>=1){
 
-            for (int start = h; start <arr.length ; start++) {
+            for (int i = h; i < length; i++) {
+
+                E temp = arr[i];
+                int j;
+                for (j = i; j-h >=0 && temp.compareTo(arr[j-h])<0; j-=h) {
+
+                    arr[j]  = arr[j-h];
+                }
+                arr[j] = temp;
+            }
+
+            h/=3;
+        }
+
+    }
+
+
+    //基于sort3的基础上进行一次代码的优化,性能并没有得到优化
+
+    public static <E extends Comparable<E>> void sort2(E[] arr){
+        int length = arr.length;
+        int h = length /2;
+        while(h>=1){
+
+            for (int start = h; start < length; start++) {
 
                 E temp = arr[start];
                 int j;
@@ -36,7 +62,7 @@ public class ShellSort {
 
     //第二次实现,性能并没有优化
 
-    public static <E extends Comparable<E>> void sort2(E[] arr){
+    public static <E extends Comparable<E>> void sort3(E[] arr){
 
         int h = arr.length/2;
         while(h>=1){
@@ -62,7 +88,7 @@ public class ShellSort {
 
     //第一次自我实现
 
-    public static <E extends Comparable<E>> void sort3(E[] arr){
+    public static <E extends Comparable<E>> void sort4(E[] arr){
 
         int n = arr.length;
 
@@ -90,15 +116,15 @@ public class ShellSort {
     }
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int n = 1_00_000;
+        int n = 5_00_000;
         Integer[] test = ArrayGenerator.generatorRandomArray(n,n);
         Integer[] test2 = Arrays.copyOf(test,test.length);
         Integer[] test3 = Arrays.copyOf(test,test.length);
         Integer[] test4 = Arrays.copyOf(test,test.length);
-        SortingHelper.sortTest(ShellSort.class,"sort",test);
+        SortingHelper.sortTest(ShellSort.class,"sort4",test4);
+        SortingHelper.sortTest(ShellSort.class,"sort3",test3);
         SortingHelper.sortTest(ShellSort.class,"sort2",test2);
-        SortingHelper.sortTest(QuickSort.class,"sort",test3);
-        SortingHelper.sortTest(MergeSort.class,"sort",test4);
+        SortingHelper.sortTest(ShellSort.class,"sort",test);
 
     }
 }
