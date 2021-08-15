@@ -97,6 +97,42 @@ public class SegmentTree<E> {
         return merger.merge(leftResult,rightResult);
     }
 
+
+    public void set(int index,E e){
+        if(index<0||index>=data.length){
+            throw new IllegalArgumentException("index is illegal.");
+        }
+
+        data[index] = e;
+
+        set(0,0,data.length-1,index,e);
+    }
+
+    /**
+     * @Description: treeIndex:树的索引,l,r:当前树节点管辖区间起始的data[l,r],dataIndex:想要修改的数组索引,e元素
+     * @param: [treeIndex, l, r, dataIndex, e]
+     * @return: void
+     */
+    private void set(int treeIndex, int l, int r, int dataIndex, E e) {
+
+        if(l==r){
+            tree[treeIndex] = data[dataIndex];
+            return;
+        }
+        int middle = l+(r-l)/2;
+        int leftChild = leftChild(treeIndex);
+        int rightChild = rightChild(treeIndex);
+        if(dataIndex>=middle+1){
+            // 表示添加元素的索引在右子树
+            set(rightChild,middle+1,r,dataIndex,e);
+        }else{
+            // 表示添加元素的索引在左子树
+            set(leftChild,l,middle,dataIndex,e);
+        }
+        //当左/右子更新之后,祖辈需要更新
+        tree[treeIndex] = merger.merge(tree[leftChild],tree[rightChild]);
+    }
+
     @Override
     public String toString() {
 
@@ -120,6 +156,8 @@ public class SegmentTree<E> {
     public static void main(String[] args) {
         Integer[] test = {1,2,3,4,1,2,3};
         SegmentTree<Integer> segmentTree = new SegmentTree<>(test, Math::addExact);
+        System.out.println(segmentTree.query(2, 4));
+        segmentTree.set(3,3);
         System.out.println(segmentTree.query(2, 4));
     }
 
