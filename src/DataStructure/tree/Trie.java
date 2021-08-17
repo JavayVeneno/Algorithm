@@ -42,7 +42,6 @@ public class Trie {
 
             // 判断当前子符是否存在后续节点
             if (cur.next.get(c)==null){
-                cur.next = new TreeMap<>();
                 cur.next.put(c,new Node());
             }
             cur = cur.next.get(c);
