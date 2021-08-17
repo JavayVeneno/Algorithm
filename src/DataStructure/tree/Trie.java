@@ -1,5 +1,6 @@
 package DataStructure.tree;
 
+import DataStructure.map.BSTMap;
 import DataStructure.set.BSTSet;
 import common.FileOperation;
 
@@ -10,11 +11,13 @@ public class Trie {
 
     private class Node{
         public boolean isWord;
+        public int sum;
 
         public TreeMap<Character,Node> next;
 
         public Node(boolean isWord){
             next = new TreeMap<>();
+            sum = 0;
             this.isWord =isWord;
         }
         public Node(){
@@ -49,7 +52,10 @@ public class Trie {
 
         if(!cur.isWord){
             cur.isWord=true;
+            cur.sum=1;
             size++;
+        }else{
+            cur.sum++;
         }
     }
 
@@ -59,8 +65,14 @@ public class Trie {
 
     private void addR(Node node, String word) {
         if (word.length()==0){
-            size++;
-            node.isWord=true;
+            if(!node.isWord){
+                size++;
+                node.isWord=true;
+                node.sum=1;
+            }
+            else{
+                node.sum++;
+            }
             return;
         }
         char head = word.charAt(0);
@@ -90,6 +102,8 @@ public class Trie {
         return containsR(root,word);
     }
 
+
+
     private boolean containsR(Node node, String word) {
 
         if(word.length()==0){
@@ -103,9 +117,22 @@ public class Trie {
     }
 
 
+    public int getWordSum(String word){
+        Node cur = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if(cur.next.get(c)==null) {
+                return 0;
+            }
+            cur = cur.next.get(c);
+        }
+
+        return cur.sum;
+    }
+
     public static void main(String[] args) {
         ArrayList<String> words = new ArrayList<>(200000);
-        BSTSet<String> set = new BSTSet<>();
+        BSTMap<String,Integer> set = new BSTMap<>();
         Trie trie = new Trie();
         if(FileOperation.readFile("src/PrideAndPrejudice.txt",words)){
             System.out.println("BSTSet ................");
@@ -113,12 +140,16 @@ public class Trie {
             long time1 = System.nanoTime();
 
             for (String word : words) {
-                set.add(word);
+                if(set.contains(word)){
+                    set.set(word,set.get(word)+1);
+                }else{
+                    set.add(word,1);
+                }
             }
             for (String word : words) {
                 set.contains(word);
             }
-
+            System.out.println(set.get("prejudice"));
             long time2 = System.nanoTime();
             double time = (time2-time1)/ 1_000_000_000.000000000;
             System.out.println("BST has "+set.size()+" elements but add and contains this elements used "+time +" seconds");
@@ -137,6 +168,7 @@ public class Trie {
             time2 = System.nanoTime();
             time = (time2-time1)/ 1_000_000_000.000000000;
             System.out.println("Trie has "+set.size()+" elements but add and contains this elements used "+time +" seconds");
+            System.out.println(trie.getWordSum("prejudice"));
         }
     }
 
