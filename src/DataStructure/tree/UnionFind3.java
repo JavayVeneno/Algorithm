@@ -25,9 +25,8 @@ public class UnionFind3 implements UF {
         return k;
     }
     @Override
-    public boolean isConnected(int q,int p){
-
-        return find(q)==find(p);
+    public boolean isConnected(int p,int q){
+        return find(p)==find(q);
     }
 
     @Override
@@ -39,6 +38,10 @@ public class UnionFind3 implements UF {
     public void unionElements(int p, int q) {
      int pRoot = find(p);
      int qRoot = find(q);
+     if(pRoot == qRoot){
+         return;
+     }
+
      if(sz[pRoot]<sz[qRoot]){
          parent[pRoot]=qRoot;
         sz[qRoot]+=sz[pRoot];
@@ -48,3 +51,4 @@ public class UnionFind3 implements UF {
      }
     }
 }
+
