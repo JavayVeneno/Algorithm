@@ -75,19 +75,56 @@ public class AVLTree<K extends Comparable<K>,V> {
 
         node.height = 1+Math.max(getHeight(node.left),getHeight(node.right));
         int balance = getBalanceFactor(node);
-        if(Math.abs(balance)>1){
-            System.out.println("unBalance: "+balance);
-        }
+//        if(Math.abs(balance)>1){
+//            System.out.println("unBalance: "+balance);
+//        }
         // 旋转时机
+        // LL
         if(balance>1 && getBalanceFactor(node.left)>=0){
             // 如果当前节点打破平衡了,并且左子大于右子(即左斜),将右旋转
             return rightRotate(node);
         }
+        // RR
         if(balance<-1 && getBalanceFactor(node.right)<=0){
             // 如果当前节点打破平衡了,并且左小于右子(即右斜),将左旋转
             return leftRotate(node);
         }
+        // LR
+        if(balance>1 && getBalanceFactor(node.left)<0){
 
+            //首先需要明白node节点是左斜,但是node.left的平衡因子是负数(即node.left.left<node.left.right)
+            // 我们首先需要将node.left进行一次左旋转,然后整个节点将会变成LL的情况
+
+//            x在y的左边,z在x的右边即对于y形成LR
+//                y                                              y
+//               / \                                            / \
+//              x  T4     x进行左旋之后将会形成LL的形式          z   T4
+//             / \        -------------------------->         / \
+//            T1  z              先进行一次x的左旋             x  T3
+//               / \                                        / \
+//              T2 T3                                      T1 T2
+            node.left = leftRotate(node.left);
+            // 直接调用LL的方法即可
+            return rightRotate(node);
+        }
+
+        // RL
+        if(balance<-1 && getBalanceFactor(node.right)>0){
+            // 反之,node节点是右斜,但是node.left平衡因子是正数(即node.right.left>node.right.right)
+            // 首先将node.right右旋,然后node变成了RR的情况
+
+//            x在y的右边,z在x的左边即对于y形成RL
+//                y                                              y
+//               / \                                            / \
+//             T1   x     x进行右旋之后将会形成RR的形式          T1  z
+//                /  \     -------------------------->           / \
+//               z   T4           先进行一次x的右旋              T2  x
+//              / \                                               / \
+//             T2 T3                                             T3 T4
+            node.right = rightRotate(node.right);
+            // 右旋之后直接调用RR的方法
+            return leftRotate(node);
+        }
         return node;
     }
 
