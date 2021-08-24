@@ -1,5 +1,6 @@
 package DataStructure.tree;
 
+import DataStructure.map.BSTMap;
 import com.sun.javafx.font.t2k.T2KFactory;
 import common.FileOperation;
 
@@ -191,6 +192,9 @@ public class AVLTree<K extends Comparable<K>,V> {
 
     public V remove(K key) {
         Node node = getNode(key);
+        if(node==null){
+            return null;
+        }
         root = remove(root,key);
         return node.value;
     }
@@ -222,36 +226,63 @@ public class AVLTree<K extends Comparable<K>,V> {
         if(node==null){
             return null;
         }
+        Node responseNode;
         if(key.compareTo(node.key)>0){
             node.right = remove(node.right,key);
-            return node;
+            responseNode =  node;
         }
         else if(key.compareTo(node.key)<0){
             node.left = remove(node.left,key);
-            return node;
+            responseNode = node;
         }
         else{
             if(node.left==null){
                 Node right = node.right;
                 node.right = null;
                 size--;
-                return right;
+                responseNode = right;
             }
             else if(node.right==null){
                 Node left = node.left;
                 node.left = null;
                 size--;
                 node = left;
-                return node;
+                responseNode =  node;
             }else{
                 Node successor = minimum(node.right);
-                successor.right = removeMin(node.right);
+                successor.right = remove(node.right,successor.key);
                 successor.left = node.left;
                 node.left = node.right = null;
-                return successor;
+                responseNode =  successor;
             }
         }
+        // 需要维护height,以及balance
+        if(responseNode==null){
+            // 有可能删除了一个叶子节点,删除后返回的是一个null,所以不需要维护height和balance
+            return null;
+        }
+        responseNode.height = 1+Math.max(getHeight(responseNode.left),getHeight(responseNode.right));
+        int balance = getBalanceFactor(responseNode);
+        //LL
+        if(balance>1 && getBalanceFactor(responseNode.left)>=0){
+           return rightRotate(responseNode);
+        }
+        //RR
+        if(balance<-1 && getBalanceFactor(responseNode.right)<=0){
+            return leftRotate(responseNode);
+        }
+        //LR
+        if(balance>1 && getBalanceFactor(responseNode.left)<0){
+            responseNode.left = leftRotate(responseNode.left);
+            return  rightRotate(responseNode);
+        }
+        //RL
+        if(balance<-1 && getBalanceFactor(responseNode.right)>0){
+            responseNode.right = rightRotate(responseNode.right);
+            return  leftRotate(responseNode);
+        }
 
+        return responseNode;
     }
 
 
@@ -318,6 +349,11 @@ public class AVLTree<K extends Comparable<K>,V> {
     }
 
     public static void main(String[] args) {
+        testItsProp();
+//        testBSTAndAVLTree();
+    }
+
+    public static void testItsProp() {
         ArrayList<String> words = new ArrayList<>(200000);
         FileOperation.readFile("src/PrideAndPrejudice.txt",words);
 
@@ -330,6 +366,12 @@ public class AVLTree<K extends Comparable<K>,V> {
                 map.add(word,1);
             }
         }
+        for (String word : words) {
+            map.remove(word);
+            if(!map.isBalanced() || !map.isBST()){
+                throw new IllegalArgumentException("this tree is not a balance binary search tree (AVLTree).");
+            }
+        }
         System.out.println(System.currentTimeMillis()-time+"ms");
         System.out.println("总词量为 :"+words.size());
         System.out.println("词汇量为 :"+map.size());
@@ -337,7 +379,43 @@ public class AVLTree<K extends Comparable<K>,V> {
         System.out.println("prejudice 出现的次数:"+map.get("prejudice"));
         System.out.println("isBST: "+map.isBST());
         System.out.println("isBalance : "+map.isBalanced());
-
     }
 
+    public static void testBSTAndAVLTree() {
+        ArrayList<String> words = new ArrayList<>(200000);
+        FileOperation.readFile("src/PrideAndPrejudice.txt",words);
+
+        long time1 = System.nanoTime();
+        BSTMap<String,Integer> map = new BSTMap<>();
+        for (String word : words) {
+            if(map.contains(word)){
+                map.set(word,map.get(word)+1);
+            }else{
+                map.add(word,1);
+            }
+        }
+        for (String word : words) {
+            map.contains(word);
+        }
+        long time2 = System.nanoTime();
+        double time = (time2-time1)/1000000000.0;
+        System.out.println(map.getClass().getName()+"耗时:"+time+" s");
+
+         time1 = System.nanoTime();
+        AVLTree<String,Integer> avlTree = new AVLTree<>();
+        for (String word : words) {
+            if(map.contains(word)){
+                map.set(word,map.get(word)+1);
+            }else{
+                map.add(word,1);
+            }
+        }
+        for (String word : words) {
+            map.contains(word);
+        }
+         time2 = System.nanoTime();
+         time = (time2-time1)/1000000000.0;
+        System.out.println(avlTree.getClass().getName()+"耗时:"+time+" s");
+
+    }
 }
