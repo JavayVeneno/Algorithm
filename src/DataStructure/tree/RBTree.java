@@ -1,6 +1,7 @@
 package DataStructure.tree;
 
 import DataStructure.map.BSTMap;
+import common.ArrayGenerator;
 import common.FileOperation;
 
 import java.util.ArrayList;
@@ -173,7 +174,7 @@ public class RBTree<K extends Comparable<K>,V> {
             return getNode(node.left,key);
         }
     }
-
+    // TODO 维护平衡
     public V remove(K key){
         Node res = getNode(key);
         if(res==null){
@@ -272,6 +273,15 @@ public class RBTree<K extends Comparable<K>,V> {
             inOrder(node.right);
         }
     }
+
+    private void inOrder(Node node, ArrayList<K> keys) {
+        if(node == null){
+            return;
+        }
+        inOrder(node.left,keys);
+        keys.add(node.key);
+        inOrder(node.right,keys);
+    }
     public void postOrder(){
         postOrder(root);
     }
@@ -314,11 +324,21 @@ public class RBTree<K extends Comparable<K>,V> {
 //        return node;
 
     }
-
+    public boolean isBST() {
+        ArrayList<K> keys = new ArrayList<>();
+        inOrder(root,keys);
+        for (int i = 1; i < keys.size(); i++) {
+            if(keys.get(i).compareTo(keys.get(i-1))<0){
+                return false;
+            }
+        }
+        return true;
+    }
 
     public static void main(String[] args) {
-        testItsProp();
-//        testBSTAndAVLTree();
+//        testItsProp();
+//        testRBTreeAndAVLTree();
+        test3();
     }
 
     public static void testItsProp() {
@@ -350,12 +370,12 @@ public class RBTree<K extends Comparable<K>,V> {
     }
 
 
-    public static void testBSTAndAVLTree() {
+    public static void testRBTreeAndAVLTree() {
         ArrayList<String> words = new ArrayList<>(200000);
         FileOperation.readFile("src/PrideAndPrejudice.txt",words);
 
         long time1 = System.nanoTime();
-        BSTMap<String,Integer> map = new BSTMap<>();
+        RBTree<String,Integer> map = new RBTree<>();
         for (String word : words) {
             if(map.contains(word)){
                 map.set(word,map.get(word)+1);
@@ -385,6 +405,33 @@ public class RBTree<K extends Comparable<K>,V> {
         time2 = System.nanoTime();
         time = (time2-time1)/1000000000.0;
         System.out.println(avlTree.getClass().getName()+"耗时:"+time+" s");
+
+    }
+
+    public static void test3() {
+        int n = 20000000;
+        Integer[] array  = ArrayGenerator.generatorRandomArray(n,Integer.MAX_VALUE);
+
+
+        AVLTree<Integer,Integer> avlTree = new AVLTree<>();
+         long time3 = System.nanoTime();
+        for (Integer integer : array) {
+            avlTree.add(integer,null);
+        }
+         long time4 = System.nanoTime();
+         double timeb = (time4-time3)/1000000000.0;
+        System.out.println(avlTree.getClass().getName()+"耗时:"+timeb+" s");
+
+
+        RBTree<Integer,Integer> map = new RBTree<>();
+        long time1 = System.nanoTime();
+        for (Integer integer : array) {
+            map.add(integer,null);
+        }
+        long time2 = System.nanoTime();
+        double time = (time2-time1)/1000000000.0;
+        System.out.println(map.getClass().getName()+"耗时:"+time+" s");
+
 
     }
 }
