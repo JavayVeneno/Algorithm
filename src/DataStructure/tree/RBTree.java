@@ -217,7 +217,7 @@ public class RBTree<K extends Comparable<K>,V> {
     }
 
 
-    private void set(K key, V newValue) {
+    public void set(K key, V newValue) {
         Node node = getNode(root, key);
 //        if(node!=null){
 //            add(key,newValue);
