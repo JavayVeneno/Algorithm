@@ -13,13 +13,24 @@ public class HashTable<K,V> {
 
     private static final int upperTol  = 10;
     private static final int lowerTol = 2;
-    private  static final int initCapacity = 7;
+
+
+    // 将自适应扩容的capaCity取用最佳值
+
+    private static int[] capaCity = {53,97,193,389,769,1543,3079,6151,12289,24593,
+                                    49157,98317,196613,393241,786433,1572869,3145739,6291469,
+                                   12582917,25165843,50331653,100663319,201326611,402653189,805306457,1610612741};
 
     private TreeMap<K,V>[] hashTable;
     private int size;
     private int m;
-    public HashTable(int m){
-        this.m  = m;
+
+    private int index = 0;
+    public HashTable(int initCapaCity){
+        while(index+1<capaCity.length  && initCapaCity>capaCity[index] ){
+            index++;
+        }
+        this.m  = capaCity[index];
         this.size=0;
         hashTable = new TreeMap[m];
         for (int i = 0; i < m; i++) {
@@ -27,11 +38,11 @@ public class HashTable<K,V> {
         }
     }
     public HashTable(){
-        this(initCapacity);
+        this(0);
     }
 
     private int hash(K key){
-        return (key.hashCode() & 0x7fffffff) % m;
+        return (key.hashCode() & 0x7fffffff) % capaCity[index];
     }
     public int size(){
         return size;
@@ -40,8 +51,9 @@ public class HashTable<K,V> {
         TreeMap<K, V> kvTreeMap = hashTable[hash(key)];
         if(!kvTreeMap.containsKey(key)){
            size++;
-           if(size>=upperTol*m){
-               reSize(m<<1);
+           if(size>=upperTol*m && index+1<=capaCity.length){
+               index++;
+               reSize(capaCity[index]);
            }
         }
         kvTreeMap.put(key,value);
@@ -53,8 +65,9 @@ public class HashTable<K,V> {
         if(kvTreeMap.containsKey(key)){
             remove =  kvTreeMap.remove(key);
             size--;
-            if(size<lowerTol*m &&  m>>1 >=initCapacity){
-                reSize(m>>1);
+            if(size<lowerTol*m &&  index>=1){
+                index--;
+                reSize(capaCity[index]);
             }
         }
         return  remove;
@@ -239,4 +252,6 @@ public class HashTable<K,V> {
 
 
     }
+
+
 }
