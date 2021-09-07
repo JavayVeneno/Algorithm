@@ -1,4 +1,4 @@
-package DataStructure.tree;
+package dataStructure.tree;
 
 public class UnionFind6 implements UF {
 

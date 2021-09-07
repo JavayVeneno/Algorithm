@@ -1,6 +1,6 @@
 package sort;
 
-import DataStructure.heap.MaxHeap;
+import dataStructure.heap.MaxHeap;
 import common.ArrayGenerator;
 import common.SortingHelper;
 
