@@ -1,4 +1,4 @@
-package sort;
+package dataStructure.hash;
 
 
 import common.Merger;
