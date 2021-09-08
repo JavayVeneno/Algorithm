@@ -83,10 +83,28 @@ public class SQRT<E> {
     }
 
 
+    public void update(int index ,E value){
+
+        if(index<0 || index>=dn) {
+            return;
+        }
+
+        // 能否继续保持O(1)的时间复杂度?
+        int b = index/sq;
+        data[index] = value;
+        block[b] = data[b*sq];
+        for (int i = b*sq; i +1< (b+1)*sq; i++) {
+            block[b] = merge.merge(block[b],data[i+1]);
+        }
+
+
+    }
+
+
     public static void main(String[] args) {
         Integer[] nums = {1,2,3,4,5,6,7,8,9};
-        SQRT<Integer> sqrt = new SQRT<>(nums, Math::max);
-
-        System.out.println(sqrt.getRange(7, 8));
+        SQRT<Integer> sqrt = new SQRT<>(nums, Math::addExact);
+        sqrt.update(4,10);
+        System.out.println(sqrt.getRange(0, 8));
     }
 }
