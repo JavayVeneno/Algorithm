@@ -44,7 +44,7 @@ class Solution4 {
         if(head == null || head.next == null){
             return head;
         }
-        ListNode ok = reverseList(head.next);
+        ListNode ok = recursiveReverse(head.next);
         head.next.next=head;
         head.next=null;
         return ok;
