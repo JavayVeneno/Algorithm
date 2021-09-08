@@ -1,7 +1,7 @@
 package leetcode.tree;
 
 
-import DataStructure.tree.SegmentTree;
+import dataStructure.tree.SegmentTree;
 
 class NumArray307p {
 
