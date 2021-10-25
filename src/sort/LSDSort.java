@@ -1,7 +1,7 @@
 package sort;
 
-import java.util.Comparator;
-import java.util.Random;
+
+import java.util.Arrays;
 
 public class LSDSort {
 
@@ -17,25 +17,27 @@ public class LSDSort {
             }
         }
 
+        int[] count = new int[MAX];
+        int[] index = new int[MAX+1];
+        String[] copy = new String[words.length];
+        // O(W)
         for (int i = W-1; i >=0; i--) {
 
             //从尾部开始每一位都执行一次计数排序
-            int[] count = new int[MAX];
-            int[] index = new int[MAX+1];
 
-            // 统计每个字母出现的次数
+            // 为了重复利用空间,并且使每次count数组的都是从0开始的
+            Arrays.fill(count,0);
+            // 统计每个字母出现的次数 O(n)
             for (String word : words) {
                 count[word.charAt(i)]++;
             }
 
-            // 计算每个字母的起始索引
+            // 计算每个字母的起始索引O(r)
             for (int x = 0; x+1 < index.length ; x++) {
                 //下一个元素的起始索引= 当前元素的起始索引+当前元素的数量
                 index[x+1] = index[x]+count[x];
             }
-
-            String[] copy = new String[words.length];
-
+            // 放置元素O(n)
             for (String word : words) {
                 // 根据该word的所排序的字母去找到他所对应的index
                 int pos = index[word.charAt(i)];
