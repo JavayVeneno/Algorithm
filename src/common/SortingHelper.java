@@ -36,7 +36,7 @@ public class SortingHelper {
         return true;
     }
 
-    public static void sortTest(Class<?> sortClass, String method, Integer[] arr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static <E extends Comparable<E>>  void sortTest(Class<?> sortClass, String method, E[] arr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
 
         Method declaredMethod = sortClass.getMethod(method,Comparable[].class);
@@ -50,5 +50,20 @@ public class SortingHelper {
         }
         double use = (end-start)/1_000_000_000.0;
         System.out.printf("%s sort %d data  use %f s %n",sortClass.getName()+"."+method,arr.length,use);
+    }
+
+
+    public static  void sortTest(String sortName,String[] arr,int w) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, IllegalAccessException {
+        Class<?> sortClass = Class.forName(sortName);
+        Method declaredMethod = sortClass.getMethod("sort",String[].class,Integer.class);
+        long start = System.nanoTime();
+        declaredMethod.invoke(sortClass,arr,w);
+        long end = System.nanoTime();
+        if(!isSorted(arr)){
+            throw new RuntimeException(sortName+" : sort faild ");
+        }
+        double use = (end-start)/1_000_000_000.0;
+        System.out.printf("%s.sort %d data  use %f s %n",sortName,arr.length,use);
+
     }
 }

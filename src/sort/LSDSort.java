@@ -1,6 +1,10 @@
 package sort;
 
 
+import common.ArrayGenerator;
+import common.SortingHelper;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class LSDSort {
@@ -9,7 +13,7 @@ public class LSDSort {
 
     private static final int MAX = 256;
 
-    public static void sort(String[] words ,int W){
+    public static void sort(String[] words ,Integer W){
 
         for (String word:words){
             if(word.length()!=W){
@@ -51,28 +55,34 @@ public class LSDSort {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
 
-        String[] students = new String[26*26*26];
-
-        for (int i = 0; i < students.length; i++) {
-            students[i]  = ""+ (char)(Math.random()*26+'a')+(char)(Math.random()*26+'a')+(char)(Math.random()*26+'a');
-        }
-
-
-
-        sort(students,3);
-        for (int i=0 ;i+1<students.length;i++){
-            if(students[i].compareTo(students[i+1])>0){
-                throw new RuntimeException("sort failed");
-            }
-//            if(students[i].getGrade()==students[i+1].getGrade()){
-//                if(students[i].getName().compareTo(students[i+1].getName())>0){
-//                    throw new RuntimeException("No stable counting sort");
-//                }
+//        String[] students = new String[26*26*26];
+//
+//        for (int i = 0; i < students.length; i++) {
+//            students[i]  = ""+ (char)(Math.random()*26+'a')+(char)(Math.random()*26+'a')+(char)(Math.random()*26+'a');
+//        }
+//        sort(students,3);
+//        for (int i=0 ;i+1<students.length;i++){
+//            if(students[i].compareTo(students[i+1])>0){
+//                throw new RuntimeException("sort failed");
 //            }
+////            if(students[i].getGrade()==students[i+1].getGrade()){
+////                if(students[i].getName().compareTo(students[i+1].getName())>0){
+////                    throw new RuntimeException("No stable counting sort");
+////                }
+////            }
+//
+//        }
+//        System.out.println(students);
 
-        }
-        System.out.println(students);
+        int amount = 1000000,length = 2;
+        String[] words = ArrayGenerator.generatorStrArray(amount, length);
+        String[] words2 = Arrays.copyOf(words, amount);
+        String[] words3 = Arrays.copyOf(words, amount);
+        SortingHelper.sortTest(QuickSort.class,"sort",words);
+        SortingHelper.sortTest(QuickSort.class,"sort3Ways",words2);
+        SortingHelper.sortTest("sort.LSDSort",words3,length);
+
     }
 }

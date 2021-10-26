@@ -39,6 +39,21 @@ public class ArrayGenerator {
         return arr;
     }
 
+    public static String[] generatorStrArray(int amount,int length){
+        String[] res = new String[amount];
+        Random random = new Random();
+        for (int i = 0; i < amount; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < length; j++) {
+                sb.append((char)(random.nextInt(126-33)+33));
+            }
+            res[i] = sb.toString();
+        }
+
+        return res;
+    }
+
+
     // 生成一组相同值
 
     public static Integer[] generatorArrayPartition(int n){
