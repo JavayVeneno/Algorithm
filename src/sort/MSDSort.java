@@ -1,18 +1,17 @@
 package sort;
 
 import common.ArrayGenerator;
-import common.SortingHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 public class MSDSort {
 
     private MSDSort(){}
 
     public static void sort(String[] arr){
-        sort(arr,0,arr.length-1,0);
+        String[] temp = new String[arr.length];
+        sort(arr,0,arr.length-1,0,temp);
     }
 
     /**
@@ -22,8 +21,10 @@ public class MSDSort {
      * @date: 2021/10/27 22:07
      * @param: [arr:源数组, left:包区间左, right:包区间右, r:目标字符串的索引]
      * @return: void
+     *
+     * @optimization: 每次递归的时候都在new了一个temp空间,是否可以类似归并排序一样,提前new一个temp用来做搬运
      */
-    private static void sort(String[] arr, int left,int right,int r){
+    private static void sort(String[] arr, int left,int right,int r,String[] temp){
 
         //递归终止条件
         if(left>=right){
@@ -35,7 +36,7 @@ public class MSDSort {
         // 同理index需要增加一位
         int[] index = new int[R+2];
         // 非原地排序,所以需要一个搬运空间,大小等于排序区间大小
-        String[] temp = new String[right-left+1];
+//        String[] temp = new String[right-left+1];
 
         //统计
         for (int i = left; i < right+1; i++) {
@@ -54,19 +55,20 @@ public class MSDSort {
         for (int i = left; i <right+1; i++) {
             String str = arr[i];
             int pos = index[str.length()<=r?0:(str.charAt(r)+1)];
-            temp[pos] = str;
+            // 因为优化后temp的位置是一个全范围的,所以此时的起点不再是0,而是left
+            temp[pos+left] = str;
             index[str.length()<=r?0:(str.charAt(r)+1)]++;
         }
 
         // 搬运元素
 
         for (int i = left; i < right+1; i++) {
-            arr[i] = temp[i-left];
+            arr[i] = temp[i];
         }
 
         // 处理第二个位置的字符r+1;
         for (int i = 1; i+1 < index.length; i++) {
-            sort(arr,left+index[i],left+index[i+1]-1,r+1);
+            sort(arr,left+index[i],left+index[i+1]-1,r+1,temp);
         }
     }
 
@@ -74,6 +76,12 @@ public class MSDSort {
         int amount = 100000,length = 10;
         String[] words = ArrayGenerator.generatorStrArray(amount, length);
         sortTest(MSDSort.class,"sort",words);
+
+        String[] test = {"BCA","CBAA","AC","BADFE","ABC","CBA"};
+        MSDSort.sort(test);
+        for (String s : test) {
+            System.out.println(s);
+        }
     }
 
     public static  void sortTest(Class<?> sortClass, String method, String[] arr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -82,7 +90,6 @@ public class MSDSort {
         Method declaredMethod = sortClass.getMethod(method,String[].class);
 
         long start = System.nanoTime();
-        // 因为invoke方法的入参是(object和一个参数的Object[],所以我们的目标参数Integer[]是一个参数需要转成object(而不是invoke的多个参数)
         declaredMethod.invoke(sortClass.getName()+"."+method,(Object)arr);
         long end = System.nanoTime();
         if(!isSorted(arr)){
@@ -92,7 +99,7 @@ public class MSDSort {
         System.out.printf("%s sort %d data  use %f s %n",sortClass.getName()+"."+method,arr.length,use);
     }
 
-    // 验证是否有虚
+    // 验证是否有序
     private static <E extends Comparable<E>> boolean isSorted(E[] arr){
 
         for (int i =1;i<arr.length;i++){
