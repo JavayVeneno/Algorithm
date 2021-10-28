@@ -39,12 +39,25 @@ public class ArrayGenerator {
         return arr;
     }
 
-    public static String[] generatorStrArray(int amount,int length){
+    public static String[] generatorSameLengthStrArray(int amount,int length){
         String[] res = new String[amount];
         Random random = new Random();
         for (int i = 0; i < amount; i++) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j < length; j++) {
+                sb.append((char)(random.nextInt(126-33)+33));
+            }
+            res[i] = sb.toString();
+        }
+
+        return res;
+    }
+    public static String[] generatorRandomLengthStrArray(int amount,int border){
+        String[] res = new String[amount];
+        Random random = new Random();
+        for (int i = 0; i < amount; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < random.nextInt(border); j++) {
                 sb.append((char)(random.nextInt(126-33)+33));
             }
             res[i] = sb.toString();

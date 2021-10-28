@@ -77,7 +77,7 @@ public class LSDSort {
 //        System.out.println(students);
 
         int amount = 1000000,length = 2;
-        String[] words = ArrayGenerator.generatorStrArray(amount, length);
+        String[] words = ArrayGenerator.generatorSameLengthStrArray(amount, length);
         String[] words2 = Arrays.copyOf(words, amount);
         String[] words3 = Arrays.copyOf(words, amount);
         SortingHelper.sortTest(QuickSort.class,"sort",words);

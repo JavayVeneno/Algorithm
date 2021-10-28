@@ -1,9 +1,11 @@
 package sort;
 
 import common.ArrayGenerator;
+import common.SortingHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class MSDSort {
 
@@ -73,15 +75,21 @@ public class MSDSort {
     }
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        int amount = 100000,length = 10;
-        String[] words = ArrayGenerator.generatorStrArray(amount, length);
+        int amount = 8000000,length = 20;
+        String[] words = ArrayGenerator.generatorRandomLengthStrArray(amount, length);
+        String[] words2 = Arrays.copyOf(words,words.length);
+        String[] words3 = Arrays.copyOf(words,words.length);
         sortTest(MSDSort.class,"sort",words);
+        SortingHelper.sortTest(QuickSort.class,"sort",words);
+        SortingHelper.sortTest(QuickSort.class,"sort3Ways",words2);
 
-        String[] test = {"BCA","CBAA","AC","BADFE","ABC","CBA"};
-        MSDSort.sort(test);
-        for (String s : test) {
-            System.out.println(s);
-        }
+
+
+//        String[] test = {"BCA","CBAA","AC","BADFE","ABC","CBA"};
+//        MSDSort.sort(test);
+//        for (String s : test) {
+//            System.out.println(s);
+//        }
     }
 
     public static  void sortTest(Class<?> sortClass, String method, String[] arr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
