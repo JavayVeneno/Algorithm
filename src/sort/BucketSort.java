@@ -1,6 +1,11 @@
 package sort;
 
 
+import common.ArrayGenerator;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class BucketSort {
     private BucketSort(){}
 
@@ -58,15 +63,46 @@ public class BucketSort {
 
         sort(arr,left,left+index[0]-1,B,temp);
         // 递归
-        for (int i = 1; i+1 < index.length; i++) {
+        for (int i = 0; i+1 < index.length; i++) {
             sort(arr,left+index[i],left+index[i+1]-1,B,temp);
         }
     }
 
-    public static void main(String[] args) {
-        Integer[] ints = {1,2,3,5,6,3,2,7,10,100};
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Integer[] ints = {1,4,3,5,6,3,2,7,10,100};
 
-        BucketSort.sort(ints,4);
+        BucketSort.sort(ints,5);
         System.out.println(ints);
+
+        int n = 1000000;
+        Integer[] test = ArrayGenerator.generatorRandomArray(n, 200);
+        sortTest("sort.BucketSort",test,5);
+    }
+
+
+    public static  void sortTest(String sortName, Integer[] arr,int B) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+
+
+        Class<?> sortClass = Class.forName(sortName);
+        Method declaredMethod = sortClass.getMethod("sort",Integer[].class,int.class);
+        long start = System.nanoTime();
+        declaredMethod.invoke(sortClass,arr,B);
+        long end = System.nanoTime();
+        if(!isSorted(arr)){
+            throw new RuntimeException(sortName+" : sort faild ");
+        }
+        double use = (end-start)/1_000_000_000.0;
+        System.out.printf("%s.sort %d data  use %f s %n",sortName,arr.length,use);
+    }
+
+    // 验证是否有序
+    private static <E extends Comparable<E>> boolean isSorted(E[] arr){
+
+        for (int i =1;i<arr.length;i++){
+            if(arr[i-1].compareTo(arr[i])>0){
+                return false;
+            }
+        }
+        return true;
     }
 }
