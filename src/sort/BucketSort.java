@@ -3,6 +3,10 @@ package sort;
 
 import common.ArrayGenerator;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -17,6 +21,53 @@ public class BucketSort {
 
         sort(arr,0,arr.length-1,B,temp);
     }
+
+    public static void sort2(Integer[] arr,int c){
+        if(c<=0){
+            throw new IllegalArgumentException("c must be greater than 0");
+        }
+
+        int maxv = Integer.MIN_VALUE;int minv = Integer.MAX_VALUE;
+        //求数组最值
+        for (int e:arr) {
+            maxv = Math.max(maxv,e);
+            minv = Math.min(minv,e);
+        }
+
+        // 根据c(每个桶最多装几个元素) 计算桶应该有多少个
+        int B = (maxv-minv+1)/c + ((maxv-minv+1) % c>0?1:0);
+
+        LinkedList<Integer>[] buckets = new LinkedList[B];
+
+        // 每个桶都是一个链表
+        for (int i = 0; i < B; i++) {
+            buckets[i] = new LinkedList<>();
+        }
+
+
+
+        // 盘点元素属于哪一个桶
+        for (int e:arr) {
+            buckets[(e-minv)/c].add(e);
+        }
+
+        // 每个桶内部排序
+        for (int i = 0; i < B; i++) {
+        //冒泡排序
+            Collections.sort(buckets[i]);
+        }
+
+        // 搬运
+        int index = 0;
+        for(int i =0;i<B;i++){
+            for(int e:buckets[i]){
+                arr[index ++] = e;
+            }
+        }
+
+
+    }
+
 
     private static void sort(Integer[] arr, int left, int right, int B, Integer[] temp) {
         if(left>=right){
@@ -71,20 +122,22 @@ public class BucketSort {
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Integer[] ints = {1,4,3,5,6,3,2,7,10,100};
 
-        BucketSort.sort(ints,5);
+        BucketSort.sort2(ints,5);
         System.out.println(ints);
 
-        int n = 1000000;
-        Integer[] test = ArrayGenerator.generatorRandomArray(n, 200);
-        sortTest("sort.BucketSort",test,5);
+        int n = 10000000;
+        Integer[] test = ArrayGenerator.generatorRandomArray(n, n);
+        Integer[] test2 = Arrays.copyOf(test,test.length);
+        sortTest(BucketSort.class,"sort",test,5);
+        sortTest(BucketSort.class,"sort2",test2,10);
     }
 
 
-    public static  void sortTest(String sortName, Integer[] arr,int B) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+    public static  void sortTest(Class clazz,String sortName ,Integer[] arr,int B) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
 
 
-        Class<?> sortClass = Class.forName(sortName);
-        Method declaredMethod = sortClass.getMethod("sort",Integer[].class,int.class);
+        Class<?> sortClass = Class.forName(clazz.getName());
+        Method declaredMethod = sortClass.getMethod(sortName,Integer[].class,int.class);
         long start = System.nanoTime();
         declaredMethod.invoke(sortClass,arr,B);
         long end = System.nanoTime();
@@ -92,7 +145,7 @@ public class BucketSort {
             throw new RuntimeException(sortName+" : sort faild ");
         }
         double use = (end-start)/1_000_000_000.0;
-        System.out.printf("%s.sort %d data  use %f s %n",sortName,arr.length,use);
+        System.out.printf("%s.%s %d data  use %f s %n",clazz.getName(),sortName,arr.length,use);
     }
 
     // 验证是否有序
