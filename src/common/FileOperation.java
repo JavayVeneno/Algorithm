@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class FileOperation {
 
@@ -56,5 +57,17 @@ public class FileOperation {
             }
         }
         return content.length();
+    }
+
+
+    public static String readFile(String name){
+
+        ArrayList<String> arr = new ArrayList<>();
+
+        if(readFile(name,arr)){
+
+            return String.join("", arr);
+        }
+        throw new RuntimeException("read file err");
     }
 }
