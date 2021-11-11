@@ -58,8 +58,10 @@ class Solution187 {
                 seen.add(hash);
             }
             // 这里容易出现整形溢出,所以写魔法值的坏处就体现在这里,如果显示声明为一个long型的就不会有这个问题。
-            hash = hash - map[dna.charAt(i-9)] * 1000000000L;
-
+            // hash = hash - map[dna.charAt(i-9)] * 1000000000;
+            //显示声明
+            long pwo10e9 =  1000000000;
+            hash = hash - map[dna.charAt(i-9)] * pwo10e9;
         }
 
         return new ArrayList<>(res);
