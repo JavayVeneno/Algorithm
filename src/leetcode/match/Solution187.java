@@ -52,6 +52,7 @@ class Solution187 {
         for (int i = 9; i < dna.length(); i++) {
             hash = hash * 10 +  map[dna.charAt(i)];
             if(seen.contains(hash)){
+                // Sting的subString[)是这样的
                 res.add(dna.substring(i-9,i+1));
             }else{
                 seen.add(hash);
