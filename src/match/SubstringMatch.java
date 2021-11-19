@@ -83,6 +83,54 @@ public class SubstringMatch {
 
     }
 
+    public static int kmp(String source,String target){
+
+        int[] next = getNext(target,new int[target.length()+1]);
+
+        int i = 0,j = 0;
+        while(i<source.length()&&j<target.length()){
+            if(j == -1|| source.charAt(i)==target.charAt(j)){
+                i++;
+                j++;
+            }else{
+                // 如果不相等,那么j需要取next数组中的对应的值
+                j = next[j];
+            }
+        }
+        //循环完之后如存在j越界target数组则取i-j作为起始索引返回
+        if(j==target.length()){
+            return i-j;
+        }
+        return -1;
+    }
+
+    private static int[] getNext(String target, int[] next) {
+
+        int i = 0,j = -1;
+        // next数组的表示:next[x] 字符串[0,x)的子串 即[0,x-1] 的最长相同真前后缀
+        // 由此next[0]表示[0,-1]的位置是不存在的,所以填
+        next[0] = -1;
+//        int x = 1;
+        while(i<target.length()){
+//            System.out.printf("第%d次循环开始 i = %d ,j = %d,\t",x,i,j);
+           if(j==-1 || target.charAt(i)==target.charAt(j)){
+//               System.out.printf("(j == -1 || target[%d] = target[%d]), 成立 \t,",i,j);
+               i++;
+               j++;
+               next[i] = j;
+//               System.out.printf("i = %d,j = %d, next[%d] = %d,\n",i,j,i,j);
+           }else{
+//               System.out.printf("(j == -1 || target[%d] = target[%d]), 不成立 \t,",i,j);
+               j = next[j];
+//               System.out.printf("j = %d,\n",j);
+           }
+//           x++;
+
+        }
+        return next;
+    }
+
+
     private static boolean equals(String source, int left, int right, String target) {
 
         for (int i = left; i <=right ; i++) {
@@ -95,29 +143,40 @@ public class SubstringMatch {
 
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        String source = "cloudStock";
-        String target = "dS";
-
-        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",source,target);
-        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",source,target);
-
-        String words = FileOperation.readFile("src/PrideAndPrejudice.txt");
-
-        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",words,"china");
-        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",words,"china");
-
-
-        int n = 1000000; int m = 5000;
-
-        String aaa = IntStream.range(0, n).mapToObj(i -> "a").collect(Collectors.joining());
-
-        String aab = IntStream.range(0, m - 1).mapToObj(i -> "a").collect(Collectors.joining("", "", "b"));
-
-        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",aaa,aab);
-        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",aaa,aab);
+//        String source = "cloudStock";
+//        String target = "dS";
+//
+//        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",source,target);
+//        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",source,target);
+//        MatchHelper.matchTest(SubstringMatch.class,"kmp",source,target);
+//
+//        String words = FileOperation.readFile("src/PrideAndPrejudice.txt");
+//
+//        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",words,"china");
+//        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",words,"china");
+//        MatchHelper.matchTest(SubstringMatch.class,"kmp",words,"china");
+//
+//
+//        int n = 1000000; int m = 5000;
+//
+//        String aaa = IntStream.range(0, n).mapToObj(i -> "a").collect(Collectors.joining());
+//
+//        String aab = IntStream.range(0, m - 1).mapToObj(i -> "a").collect(Collectors.joining("", "", "b"));
+//
+//        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",aaa,aab);
+//        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",aaa,aab);
+//        MatchHelper.matchTest(SubstringMatch.class,"kmp",aaa,aab);
 
         //根据以上测试得出一个结论:在暴力匹配子串时,常规场景下,我们的匹配大多数都是提前终止的,且子串的长度都不会太长,所有性能是非常高的
         //但是在最后一个测试用例中可以看到在特殊的场景下,是会退化到 O(n * m)的
+
+
+
+//        String source = "cloudStock";
+//        String target = "dS";
+
+        int[] next = getNext("ABABC", new int[6]);
+        System.out.println(next);
 
     }
 }
