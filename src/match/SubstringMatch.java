@@ -143,32 +143,32 @@ public class SubstringMatch {
 
 
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-//        String source = "cloudStock";
-//        String target = "dS";
-//
-//        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",source,target);
-//        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",source,target);
-//        MatchHelper.matchTest(SubstringMatch.class,"kmp",source,target);
-//
-//        String words = FileOperation.readFile("src/PrideAndPrejudice.txt");
-//
-//        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",words,"china");
-//        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",words,"china");
-//        MatchHelper.matchTest(SubstringMatch.class,"kmp",words,"china");
-//
-//
-//        int n = 1000000; int m = 5000;
-//
-//        String aaa = IntStream.range(0, n).mapToObj(i -> "a").collect(Collectors.joining());
-//
-//        String aab = IntStream.range(0, m - 1).mapToObj(i -> "a").collect(Collectors.joining("", "", "b"));
-//
-//        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",aaa,aab);
-//        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",aaa,aab);
-//        MatchHelper.matchTest(SubstringMatch.class,"kmp",aaa,aab);
+        String source = "cloudStock";
+        String target = "dS";
 
-        //根据以上测试得出一个结论:在暴力匹配子串时,常规场景下,我们的匹配大多数都是提前终止的,且子串的长度都不会太长,所有性能是非常高的
-        //但是在最后一个测试用例中可以看到在特殊的场景下,是会退化到 O(n * m)的
+        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",source,target);
+        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",source,target);
+        MatchHelper.matchTest(SubstringMatch.class,"kmp",source,target);
+
+        String words = FileOperation.readFile("src/PrideAndPrejudice.txt");
+
+        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",words,"china");
+        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",words,"china");
+        MatchHelper.matchTest(SubstringMatch.class,"kmp",words,"china");
+
+
+        int n = 1000000; int m = 5000;
+
+        String aaa = IntStream.range(0, n).mapToObj(i -> "a").collect(Collectors.joining());
+
+        String aab = IntStream.range(0, m - 1).mapToObj(i -> "a").collect(Collectors.joining("", "", "b"));
+
+        MatchHelper.matchTest(SubstringMatch.class,"bruteForce",aaa,aab);
+        MatchHelper.matchTest(SubstringMatch.class,"rabinKarp",aaa,aab);
+        MatchHelper.matchTest(SubstringMatch.class,"kmp",aaa,aab);
+
+//        根据以上测试得出一个结论:在暴力匹配子串时,常规场景下,我们的匹配大多数都是提前终止的,且子串的长度都不会太长,所有性能是非常高的
+//        但是在最后一个测试用例中可以看到在特殊的场景下,是会退化到 O(n * m)的
 
 
 
