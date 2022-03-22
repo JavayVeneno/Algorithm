@@ -1,6 +1,5 @@
 package Serach;
 
-import sun.plugin.com.event.COMEventHandler;
 
 public class BinarySearch {
     private BinarySearch(){}
