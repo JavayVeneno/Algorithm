@@ -103,7 +103,7 @@ public class SubstringMatch {
         }
         return -1;
     }
-
+//获取next数组是避免回溯的核心，这里内容久而久之还是容易忘
     private static int[] getNext(String target, int[] next) {
 
         int i = 0,j = -1;
