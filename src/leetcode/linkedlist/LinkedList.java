@@ -1,7 +1,8 @@
 package leetcode.linkedlist;
 
+import common.Pair;
+
 import java.util.Objects;
-import javafx.util.Pair;
 
 public class LinkedList<E> {
 

@@ -1,8 +1,8 @@
 package sort;
 
 import common.ArrayGenerator;
+import common.Pair;
 import common.SortingHelper;
-import javafx.util.Pair;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
