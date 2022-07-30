@@ -9,7 +9,7 @@ public class SortingHelper {
 
     public static  <E extends Comparable<E>>  void sortTest(String sortName,E[] arr) throws NoSuchMethodException, ClassNotFoundException, InvocationTargetException, IllegalAccessException {
 
-        Class<?> sortClass = Class.forName(sortName);
+        Class<?> sortClass = Class.forName("sort."+sortName);
         //在这遇到了一点小问题,直接getMethod(String name)拿去不到方法需要加入参类型,我们的入参类型是实现比较器接口的参数,所以需要比较器数组
         Method declaredMethod = sortClass.getMethod("sort",Comparable[].class);
 
